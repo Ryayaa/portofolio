@@ -1,0 +1,9 @@
+.lanyard-wrapper {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100%; /* Ubah jadi 100% agar ikut parent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
