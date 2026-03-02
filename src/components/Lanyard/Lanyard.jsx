@@ -12,8 +12,8 @@ import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
-export default function Lanyard({ position = [0, 0, 25], gravity = [0, -40, 0], fov = 20, transparent = true }) {
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+export default function Lanyard({ gravity = [0, -40, 0], transparent = true }) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -21,16 +21,20 @@ export default function Lanyard({ position = [0, 0, 25], gravity = [0, -40, 0], 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const cameraConfig = isMobile 
+    ? { position: [0, 0, 25], fov: 30 } // Mobile: Lebih jauh & FOV luas
+    : { position: [0, 0, 20], fov: 20 }; // Desktop: Fokus dekat
+
   return (
     <div className="lanyard-wrapper" style={{ width: '100%', height: '100%' }}>
       <Canvas
-        camera={{ position: position, fov: fov }}
+        camera={cameraConfig}
         dpr={[1, 1.2]}
         gl={{ alpha: transparent, antialias: true }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
-        <Physics gravity={gravity}>
+        <Physics gravity={gravity} interpolate={false}>
           <Band isMobile={isMobile} />
         </Physics>
         <Environment blur={0.75}>
@@ -49,13 +53,12 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   
   const { nodes, materials } = useGLTF(cardGLB);
   const texture = useTexture(lanyardTexture);
-  const { width, height } = useThree((state) => state.size);
 
   const [curve] = useState(() => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]));
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
-  // FORMAT ARRAY - Wajib untuk versi library Anda agar tidak error "not iterable"
+  // FORMAT SESUAI DOC: useRopeJoint(fixed, j1, [[0,0,0], [0,0,0], 1])
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
@@ -82,11 +85,13 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
 
     if (fixed.current && card.current) {
       const safeDelta = Math.min(delta, 0.1);
+      
       [j1, j2].forEach((ref) => {
         if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
         const translation = ref.current.translation();
         if (Number.isFinite(translation.x)) {
-            ref.current.lerped.lerp(translation, safeDelta * 20);
+            const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(translation)));
+            ref.current.lerped.lerp(translation, safeDelta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)));
         }
       });
 
@@ -95,7 +100,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
       const p2 = j1.current.lerped;
       const p3 = fixed.current.translation();
 
-      if (Number.isFinite(p0.x) && Number.isFinite(p1.x)) {
+      if (Number.isFinite(p0.x) && Number.isFinite(p3.x)) {
         curve.points[0].copy(p0);
         curve.points[1].copy(p1);
         curve.points[2].copy(p2);
@@ -117,7 +122,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     <>
       <group position={[0, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        {/* SPAWN VERTIKAL: Mencegah ledakan fisika saat jatuh */}
+        {/* SPAWN VERTIKAL: Jauh lebih stabil daripada horizontal offset */}
         <RigidBody position={[0, -1, 0]} ref={j1} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
         <RigidBody position={[0, -2, 0]} ref={j2} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
         <RigidBody position={[0, -3, 0]} ref={j3} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
