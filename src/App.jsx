@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
-import { Moon, Sun, ArrowRight, Mouse, Code, Database, Layout, Terminal, ExternalLink, Mail, Github, Linkedin } from "lucide-react";
+import { Moon, Sun, ArrowRight, Mouse, Code, Database, Layout, Terminal, ExternalLink, Mail, Github, Linkedin, Instagram } from "lucide-react";
 
 import TextType from "./components/TextType";
 import ProfileCard from "./components/ProfileCard"; 
@@ -12,6 +12,9 @@ import Preloader from "./components/Preloader";
 import ProjectModal from "./components/ProjectModal";
 import Toast from "./components/Toast";
 import fotoProfil from "./assets/foto-profil.jpg"; 
+import imgOmbudsman from "./assets/ombudsman.png";
+import imgPaduanSuara from "./assets/paduan-suara.png";
+import imgPMM4 from "./assets/pmm4.png";
 
 // Lazy Load Komponen Lanyard
 const Lanyard = lazy(() => import("./components/Lanyard/Lanyard"));
@@ -57,10 +60,37 @@ function App() {
     { title: "Architecting on AWS", issuer: "AWS", date: "2025", desc: "Cloud architecture design.", color: "rgba(249, 115, 22, 0.2)" }
   ];
 
+  const mediaItems = [
+    { 
+      title: "Mahasiswa Poliban Ciptakan Aplikasi Penerimaan Laporan", 
+      source: "Ombudsman RI", 
+      image: imgOmbudsman,
+      link: "https://ombudsman.go.id/perwakilan/news/r/pwk--magang-di-ombudsman-ri-kalsel-mahasiswa-poliban-ciptakan-aplikasi-penerimaan-laporan", 
+      desc: "Inovasi aplikasi untuk memudahkan masyarakat dalam menyampaikan laporan ke Ombudsman. Proyek ini merupakan bagian dari kontribusi nyata mahasiswa untuk pelayanan publik.",
+      color: "rgba(59, 130, 246, 0.2)"
+    },
+    { 
+      title: "Paduan Suara Poliban Berhasil Menjuarai Lomba", 
+      source: "LPM Lensa", 
+      image: imgPaduanSuara,
+      link: "https://www.lpmlensa.info/2023/07/paduan-suara-poliban-berhasil-menjuarai.html", 
+      desc: "Prestasi gemilang tim paduan suara Poliban dalam ajang perlombaan bergengsi. Menunjukkan bakat dan kerja keras dalam bidang seni dan kreativitas.",
+      color: "rgba(168, 85, 247, 0.2)"
+    },
+    { 
+      title: "Pertukaran Mahasiswa Merdeka 4", 
+      source: "Kemendikbudristek", 
+      image: imgPMM4,
+      link: "#", 
+      desc: "Berpartisipasi dalam program Pertukaran Mahasiswa Merdeka Angkatan 4, memperluas wawasan akademik dan budaya di universitas mitra di seluruh Indonesia.",
+      color: "rgba(34, 197, 94, 0.2)"
+    }
+  ];
+
   const navItems = [
     { label: "Navigation", bgColor: "#170D27", textColor: "#fff", links: [{ label: "Home", href: "#home" }, { label: "About Me", href: "#about" }, { label: "Contact", href: "#contact" }] },
-    { label: "Portfolio", bgColor: "#0D0716", textColor: "#fff", links: [{ label: "Works", href: "#certificates" }, { label: "Certificates", href: "#certificates" }] },
-    { label: "Social", bgColor: "#271E37", textColor: "#fff", links: [{ label: "LinkedIn", href: "#" }, { label: "GitHub", href: "#" }] }
+    { label: "Portfolio", bgColor: "#0D0716", textColor: "#fff", links: [{ label: "Works", href: "#certificates" }, { label: "News", href: "#news" }] },
+    { label: "Social", bgColor: "#271E37", textColor: "#fff", links: [{ label: "LinkedIn", href: "https://www.linkedin.com/in/arrya-fitriansyah/" }, { label: "Instagram", href: "https://www.instagram.com/aryya_/" }] }
   ];
 
   useEffect(() => {
@@ -240,7 +270,48 @@ function App() {
         </div>
       </section>
 
-      {/* --- SECTION 4: CONTACT SECTION --- */}
+      {/* --- SECTION 4: MEDIA SECTION --- */}
+      <section id="news" className="relative min-h-screen w-full bg-[#0a0a0a] text-white py-20 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+            <div className="flex flex-col items-center mb-16 space-y-4 text-center">
+               <div className="inline-block px-4 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-400 text-sm font-medium backdrop-blur-sm">Pemberitaan</div>
+               <h2 className="text-4xl md:text-6xl font-bold tracking-tight">Media <span className="text-purple-500">Highlights</span>.</h2>
+               <p className="text-gray-400 text-lg max-w-2xl">Liputan media dan publikasi mengenai proyek serta pencapaian saya di berbagai platform.</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+               {mediaItems.map((m, i) => (
+                  <AnimatedContent key={i} distance={40} direction="vertical" delay={i * 0.1}>
+                    <a href={m.link} target="_blank" rel="noopener noreferrer" className="group block h-full">
+                        <SpotlightCard spotlightColor={m.color} className="h-full !p-5">
+                          <div className="flex flex-col h-full space-y-5">
+                            <div className="w-full aspect-video bg-white/5 rounded-xl overflow-hidden border border-white/10 relative shadow-lg">
+                               <img 
+                                 src={m.image} 
+                                 alt={m.title} 
+                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
+                               />
+                               <div className="absolute top-3 left-3 px-2 py-0.5 bg-purple-600/90 rounded text-[9px] font-black uppercase tracking-wider backdrop-blur-md">
+                                  {m.source}
+                               </div>
+                            </div>
+                            <div className="space-y-2">
+                               <h3 className="text-lg font-bold leading-tight group-hover:text-purple-400 transition-colors duration-300 line-clamp-2">{m.title}</h3>
+                               <p className="text-gray-400 text-xs md:text-sm line-clamp-3 leading-relaxed opacity-80">{m.desc}</p>
+                            </div>
+                            <div className="flex items-center gap-2 text-purple-400 text-[10px] font-black uppercase tracking-widest mt-auto group-hover:gap-3 transition-all">
+                               Baca Artikel <ArrowRight size={12} />
+                            </div>
+                          </div>
+                        </SpotlightCard>
+                    </a>
+                  </AnimatedContent>
+               ))}
+            </div>
+        </div>
+      </section>
+
+      {/* --- SECTION 5: CONTACT SECTION --- */}
       <section id="contact" className="relative min-h-screen w-full bg-[#0a0a0a] text-white py-20 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid md:grid-cols-2 gap-16 items-start">
@@ -262,8 +333,9 @@ function App() {
                   </div>
                 </div>
                 <div className="flex gap-4 pt-4">
-                  <a href="#" className="p-3 bg-white/5 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"><Github size={20} /></a>
-                  <a href="#" className="p-3 bg-white/5 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"><Linkedin size={20} /></a>
+                  <a href="https://github.com/arrya-fitriansyah" target="_blank" rel="noopener noreferrer" className="p-3 bg-white/5 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"><Github size={20} /></a>
+                  <a href="https://www.linkedin.com/in/arrya-fitriansyah/" target="_blank" rel="noopener noreferrer" className="p-3 bg-white/5 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"><Linkedin size={20} /></a>
+                  <a href="https://www.instagram.com/aryya_/" target="_blank" rel="noopener noreferrer" className="p-3 bg-white/5 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"><Instagram size={20} /></a>
                 </div>
               </div>
             </AnimatedContent>
@@ -298,6 +370,11 @@ function App() {
       <footer className="w-full py-12 bg-black border-t border-white/5 text-center text-gray-500">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-sm tracking-widest uppercase font-bold text-white/20 mb-4">Arrya Fitriansyah</p>
+          <div className="flex justify-center gap-6 mb-8">
+             <a href="https://www.linkedin.com/in/arrya-fitriansyah/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">LinkedIn</a>
+             <a href="https://www.instagram.com/aryya_/" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors">Instagram</a>
+             <a href="https://github.com/arrya-fitriansyah" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
+          </div>
           <p className="text-xs opacity-50">&copy; 2026 Crafted with Passion. All Rights Reserved.</p>
         </div>
       </footer>
