@@ -9,12 +9,14 @@ import SpotlightCard from "./components/SpotlightCard";
 import AnimatedContent from "./components/AnimatedContent"; 
 import MusicPlayer from "./components/MusicPlayer";
 import Preloader from "./components/Preloader";
+import IntroVideo from "./components/IntroVideo";
 import ProjectModal from "./components/ProjectModal";
 import Toast from "./components/Toast";
+import { AnimatePresence } from "framer-motion";
 import fotoProfil from "./assets/foto-profil.jpg"; 
-import imgOmbudsman from "./assets/ombudsman.png";
-import imgPaduanSuara from "./assets/paduan-suara.png";
-import imgPMM4 from "./assets/pmm4.png";
+import imgOmbudsman from "./assets/ombudsman.jpg";
+import imgPaduanSuara from "./assets/paduan-suara.jpg";
+import imgPMM4 from "./assets/pmm4.jpg";
 
 // Lazy Load Komponen Lanyard
 const Lanyard = lazy(() => import("./components/Lanyard/Lanyard"));
@@ -39,6 +41,8 @@ function App() {
   });
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const [preloaderDone, setPreloaderDone] = useState(false);
+  const [videoDone, setVideoDone] = useState(false);
   const [activeTab, setActiveTab] = useState(0); 
   const [selectedProject, setSelectedProject] = useState(null);
   const [showToast, setShowToast] = useState(false);
@@ -114,7 +118,16 @@ function App() {
     <div className="relative w-full transition-colors duration-300 bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-white font-sans overflow-x-hidden">
       
       {/* 2. PRELOADER */}
-      <Preloader isLoaded={isLoaded} />
+      {!preloaderDone && (
+        <Preloader isLoaded={isLoaded} onExitComplete={() => setPreloaderDone(true)} />
+      )}
+
+      {/* 2.5 INTRO VIDEO (Floating Popup) */}
+      <AnimatePresence>
+        {preloaderDone && !videoDone && (
+          <IntroVideo onVideoEnd={() => setVideoDone(true)} />
+        )}
+      </AnimatePresence>
 
       {/* 3. PROJECT MODAL */}
       <ProjectModal 

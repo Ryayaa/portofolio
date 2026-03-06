@@ -6,4 +6,16 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   assetsInclude: ['**/*.glb'], // WAJIB ada sesuai lanyard.md
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ['three'],
+          framer: ['framer-motion'],
+          icons: ['lucide-react']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000
+  }
 })

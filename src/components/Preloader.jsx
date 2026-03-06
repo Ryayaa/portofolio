@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-export default function Preloader({ isLoaded }) {
+export default function Preloader({ isLoaded, onExitComplete }) {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function Preloader({ isLoaded }) {
   }, [isLoaded]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={onExitComplete}>
       {show && (
         <motion.div
           initial={{ opacity: 1 }}
