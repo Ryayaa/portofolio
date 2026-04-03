@@ -1,8 +1,11 @@
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Github, Code } from 'lucide-react';
 
-export default function ProjectModal({ project, isOpen, onClose }) {
+const ProjectModal = React.memo(({ project, isOpen, onClose }) => {
   if (!project) return null;
+
+  const displayImage = project.modalImage || project.image;
 
   return (
     <AnimatePresence>
@@ -31,12 +34,22 @@ export default function ProjectModal({ project, isOpen, onClose }) {
               <X size={20} />
             </button>
 
-            {/* Left: Image/Preview Placeholder */}
-            <div className="md:w-1/2 bg-slate-900 flex items-center justify-center p-12 border-b md:border-b-0 md:border-r border-white/5">
-               <div className="relative group">
-                  <div className="absolute -inset-4 bg-blue-500/20 blur-xl rounded-full group-hover:bg-blue-500/30 transition-all"></div>
-                  <Code size={120} className="text-blue-500/50 relative" />
-               </div>
+            {/* Left: Image/Preview */}
+            <div className="md:w-1/2 bg-slate-900 flex items-center justify-center border-b md:border-b-0 md:border-r border-white/5 overflow-hidden">
+               {displayImage ? (
+                 <img 
+                   src={displayImage} 
+                   alt={project.title} 
+                   loading="lazy"
+                   decoding="async"
+                   className="w-full h-full object-cover"
+                 />
+               ) : (
+                 <div className="p-12 relative group w-full h-full flex items-center justify-center">
+                    <div className="absolute -inset-4 bg-blue-500/20 blur-xl rounded-full group-hover:bg-blue-500/30 transition-all"></div>
+                    <Code size={120} className="text-blue-500/50 relative" />
+                 </div>
+               )}
             </div>
 
             {/* Right: Content */}
@@ -74,4 +87,6 @@ export default function ProjectModal({ project, isOpen, onClose }) {
       )}
     </AnimatePresence>
   );
-}
+});
+
+export default ProjectModal;

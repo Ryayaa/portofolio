@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
+import React, { useState, useEffect, useRef, Suspense, lazy, useMemo, useCallback } from "react";
 import { Moon, Sun, ArrowRight, Mouse, Code, Database, Layout, Terminal, ExternalLink, Mail, Github, Linkedin, Instagram } from "lucide-react";
 
 import TextType from "./components/TextType";
@@ -7,19 +7,95 @@ import GooeyNav from "./components/GooeyNav";
 import CardNav from "./components/CardNav"; 
 import SpotlightCard from "./components/SpotlightCard"; 
 import AnimatedContent from "./components/AnimatedContent"; 
-import MusicPlayer from "./components/MusicPlayer";
 import Preloader from "./components/Preloader";
-import IntroVideo from "./components/IntroVideo";
-import ProjectModal from "./components/ProjectModal";
 import Toast from "./components/Toast";
 import { AnimatePresence } from "framer-motion";
 import fotoProfil from "./assets/foto-profil.jpg"; 
 import imgOmbudsman from "./assets/ombudsman.jpg";
+import imgOmbudsmanSystem from "./assets/image.png";
 import imgPaduanSuara from "./assets/paduan-suara.jpg";
 import imgPMM4 from "./assets/pmm4.jpg";
+import imgKooperasi from "./assets/kooperasi.png";
+import imgISawit from "./assets/I-Sawit.png";
+import imgISawitMobile from "./assets/I-Sawit Mobile.jpeg";
+import imgPreview from "./assets/preview.png";
 
-// Lazy Load Komponen Lanyard
+// Lazy Load Heavy Components
 const Lanyard = lazy(() => import("./components/Lanyard/Lanyard"));
+const IntroVideo = lazy(() => import("./components/IntroVideo"));
+const ProjectModal = lazy(() => import("./components/ProjectModal"));
+const MusicPlayer = lazy(() => import("./components/MusicPlayer"));
+
+// Memoized Project Card Component for better performance
+const ProjectCard = React.memo(({ project, onClick }) => (
+  <div onClick={() => onClick(project)} className="cursor-pointer group h-full">
+    <SpotlightCard spotlightColor={project.color} className="h-full !p-5">
+      <div className="flex flex-col h-full space-y-5">
+        <div className="w-full aspect-video bg-white/5 rounded-xl overflow-hidden border border-white/10 relative shadow-lg">
+           {project.image ? (
+              <img 
+                src={project.image} 
+                alt={project.title} 
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
+              />
+           ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/10 to-purple-500/10">
+                 <Code size={40} className="text-white/20 group-hover:scale-110 transition-transform duration-500" />
+              </div>
+           )}
+           <div className="absolute top-3 left-3 px-2 py-0.5 bg-blue-600/90 rounded text-[9px] font-black uppercase tracking-wider backdrop-blur-md">
+              Project
+           </div>
+        </div>
+        <div className="space-y-2">
+           <h3 className="text-xl font-bold group-hover:text-blue-400 transition-colors">{project.title}</h3>
+           <p className="text-gray-400 text-sm line-clamp-2">{project.desc}</p>
+        </div>
+        <div className="flex-grow"></div>
+        <div className="flex flex-wrap gap-2 pt-2">
+           {project.tech.map((t, idx) => (
+              <span key={idx} className="px-2.5 py-1 bg-white/5 border border-white/10 rounded-lg text-[9px] font-bold uppercase tracking-wider text-gray-300">
+                 {t}
+              </span>
+           ))}
+        </div>
+      </div>
+    </SpotlightCard>
+  </div>
+));
+
+// Memoized Media Card
+const MediaCard = React.memo(({ item, index }) => (
+  <AnimatedContent distance={40} direction="vertical" delay={index * 0.1}>
+    <a href={item.link} target="_blank" rel="noopener noreferrer" className="group block h-full">
+        <SpotlightCard spotlightColor={item.color} className="h-full !p-5">
+          <div className="flex flex-col h-full space-y-5">
+            <div className="w-full aspect-video bg-white/5 rounded-xl overflow-hidden border border-white/10 relative shadow-lg">
+               <img 
+                 src={item.image} 
+                 alt={item.title} 
+                 loading="lazy"
+                 decoding="async"
+                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
+               />
+               <div className="absolute top-3 left-3 px-2 py-0.5 bg-purple-600/90 rounded text-[9px] font-black uppercase tracking-wider backdrop-blur-md">
+                  {item.source}
+               </div>
+            </div>
+            <div className="space-y-2">
+               <h3 className="text-lg font-bold leading-tight group-hover:text-purple-400 transition-colors duration-300 line-clamp-2">{item.title}</h3>
+               <p className="text-gray-400 text-xs md:text-sm line-clamp-3 leading-relaxed opacity-80">{item.desc}</p>
+            </div>
+            <div className="flex items-center gap-2 text-purple-400 text-[10px] font-black uppercase tracking-widest mt-auto group-hover:gap-3 transition-all">
+               Baca Artikel <ArrowRight size={12} />
+            </div>
+          </div>
+        </SpotlightCard>
+    </a>
+  </AnimatedContent>
+));
 
 // Sensor Visibilitas
 const VisibilitySensor = ({ children }) => {
@@ -47,24 +123,39 @@ function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [showToast, setShowToast] = useState(false);
   
-  const portfolioItems = [
+  const portfolioItems = useMemo(() => [
     { label: "Projects", href: "#certificates" },
     { label: "Certificates", href: "#certificates" },
     { label: "Tech Stack", href: "#techstack" },
-  ];
+  ], []);
 
-  const projects = [
-    { id: 1, title: "POSKU (Point of Sales)", desc: "Aplikasi kasir modern untuk UMKM dengan manajemen stok realtime.", tech: ["Go", "PostgreSQL", "React"], color: "rgba(0, 229, 255, 0.2)" },
-    { id: 2, title: "Koperasi Digital", desc: "Sistem manajemen koperasi realtime dengan dashboard admin lengkap.", tech: ["NestJS", "TypeScript", "MySQL"], color: "rgba(139, 92, 246, 0.2)" },
-    { id: 3, title: "IoT Smart Garden", desc: "Monitoring kelembaban tanah otomatis berbasis ESP32 dan Firebase.", tech: ["IoT", "ESP32", "Firebase"], color: "rgba(34, 197, 94, 0.2)" }
-  ];
+  const projects = useMemo(() => [
+    { id: 1, title: "Sistem Informasi Ombudsman", desc: "Sistem manajemen pengaduan masyarakat (E-Lapor) dan internal Ombudsman berbasis Laravel 11 & Filament 3.", tech: ["Laravel", "Filament", "MySQL", "Tailwind"], image: imgOmbudsmanSystem, color: "rgba(0, 229, 255, 0.2)" },
+    { id: 2, title: "Kooperasi.com", desc: "Platform SaaS HUB Koperasi Digital untuk KSP & KSU di Indonesia. Dilengkapi WhatsApp Banking, eKYC, dan Credit Scoring.", tech: ["NestJS", "WhatsApp API", "PostgreSQL","NextJs"], image: imgKooperasi, color: "rgba(139, 92, 246, 0.2)" },
+    { id: 3, title: "I-Sawit", desc: "Sistem monitoring dan manajemen perkebunan sawit berbasis IoT. Memantau suhu, kelembaban, dan lokasi GPS secara realtime melalui Flutter & Firebase.", tech: ["Flutter", "Firebase", "ESP32", "LoRa"], image: imgISawit, modalImage: imgISawitMobile, color: "rgba(34, 197, 94, 0.2)" }
+  ], []);
 
-  const certificates = [
+  const techStack = useMemo(() => [
+    { name: "React", icon: "react" },
+    { name: "Next.js", icon: "nextjs" },
+    { name: "Laravel", icon: "laravel" },
+    { name: "NestJS", icon: "nestjs" },
+    { name: "Go", icon: "go" },
+    { name: "Flutter", icon: "flutter" },
+    { name: "Python", icon: "py" },
+    { name: "PostgreSQL", icon: "postgres" },
+    { name: "MySQL", icon: "mysql" },
+    { name: "Tailwind", icon: "tailwind" },
+    { name: "Firebase", icon: "firebase" },
+    { name: "Docker", icon: "docker" },
+  ], []);
+
+  const certificates = useMemo(() => [
     { title: "Fullstack Web Developer", issuer: "Dicoding Indonesia", date: "2024", desc: "Frontend & Backend competency.", color: "rgba(234, 179, 8, 0.2)" },
     { title: "Architecting on AWS", issuer: "AWS", date: "2025", desc: "Cloud architecture design.", color: "rgba(249, 115, 22, 0.2)" }
-  ];
+  ], []);
 
-  const mediaItems = [
+  const mediaItems = useMemo(() => [
     { 
       title: "Mahasiswa Poliban Ciptakan Aplikasi Penerimaan Laporan", 
       source: "Ombudsman RI", 
@@ -89,13 +180,13 @@ function App() {
       desc: "Berpartisipasi dalam program Pertukaran Mahasiswa Merdeka Angkatan 4, memperluas wawasan akademik dan budaya di universitas mitra di seluruh Indonesia.",
       color: "rgba(34, 197, 94, 0.2)"
     }
-  ];
+  ], []);
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { label: "Navigation", bgColor: "#170D27", textColor: "#fff", links: [{ label: "Home", href: "#home" }, { label: "About Me", href: "#about" }, { label: "Contact", href: "#contact" }] },
     { label: "Portfolio", bgColor: "#0D0716", textColor: "#fff", links: [{ label: "Works", href: "#certificates" }, { label: "News", href: "#news" }] },
     { label: "Social", bgColor: "#271E37", textColor: "#fff", links: [{ label: "LinkedIn", href: "https://www.linkedin.com/in/arrya-fitriansyah/" }, { label: "Instagram", href: "https://www.instagram.com/aryya_/" }] }
-  ];
+  ], []);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDarkMode);
@@ -108,11 +199,35 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleContactSubmit = (e) => {
+  const handleContactSubmit = useCallback(async (e) => {
     e.preventDefault();
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 4000);
-  };
+    const form = e.target;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/xjgpayeq", {
+        method: "POST",
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setShowToast(true);
+        form.reset();
+        setTimeout(() => setShowToast(false), 4000);
+      } else {
+        alert("Oops! Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.");
+      }
+    } catch (error) {
+      alert("Oops! Terjadi masalah koneksi. Silakan periksa koneksi internet Anda.");
+    }
+  }, []);
+
+  const handleProjectClick = useCallback((project) => {
+    setSelectedProject(project);
+  }, []);
 
   return (
     <div className="relative w-full transition-colors duration-300 bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-white font-sans overflow-x-hidden">
@@ -125,16 +240,20 @@ function App() {
       {/* 2.5 INTRO VIDEO (Floating Popup) */}
       <AnimatePresence>
         {preloaderDone && !videoDone && (
-          <IntroVideo onVideoEnd={() => setVideoDone(true)} />
+          <Suspense fallback={null}>
+            <IntroVideo onVideoEnd={() => setVideoDone(true)} />
+          </Suspense>
         )}
       </AnimatePresence>
 
       {/* 3. PROJECT MODAL */}
-      <ProjectModal 
-        isOpen={!!selectedProject} 
-        project={selectedProject} 
-        onClose={() => setSelectedProject(null)} 
-      />
+      <Suspense fallback={null}>
+        <ProjectModal 
+          isOpen={!!selectedProject} 
+          project={selectedProject} 
+          onClose={() => setSelectedProject(null)} 
+        />
+      </Suspense>
 
       {/* 4. TOAST NOTIFICATION */}
       <Toast 
@@ -143,7 +262,9 @@ function App() {
         onClose={() => setShowToast(false)} 
       />
 
-      <MusicPlayer />
+      <Suspense fallback={null}>
+        <MusicPlayer />
+      </Suspense>
 
       <CardNav 
         logoText="ARRYA"
@@ -190,7 +311,7 @@ function App() {
                     </div>
                   </div>
                   <p className="max-w-lg text-gray-400 text-base md:text-xl leading-relaxed">
-                    Membangun aplikasi web yang <span className="text-white font-semibold">cepat</span>, <span className="text-white font-semibold">responsif</span>, dan <span className="text-white font-semibold">interaktif</span>.
+                    <span className="text-white font-semibold">Selalu belajar</span>, Selalu berkembang, <span className="text-white font-semibold">Selalu lebih baik</span> dari kemarin.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4 justify-center md:justify-start">
                     <button 
@@ -234,8 +355,30 @@ function App() {
             <AnimatedContent distance={50} direction="vertical">
               <div className="space-y-4 md:space-y-6 text-center md:text-left">
                 <div className="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs md:text-sm font-medium backdrop-blur-sm">Tentang Saya</div>
-                <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">Menggabungkan <span className="text-blue-500">Kode</span> dengan <span className="text-purple-500">Kreativitas</span>.</h2>
-                <p className="text-gray-400 text-base md:text-lg leading-relaxed">Saya adalah Fullstack Developer yang berfokus pada performa dan estetika menggunakan teknologi modern.</p>
+                <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">Membangun Masa Depan Melalui <span className="text-blue-500">Teknologi</span>.</h2>
+                <div className="space-y-4 text-gray-400 text-base md:text-lg leading-relaxed">
+                  <p>
+                    Halo! Saya <span className="text-white font-semibold">Arrya Fitriansyah</span>, seorang Fullstack Developer dan mahasiswa Teknik Informatika di Politeknik Negeri Banjarmasin<span className="text-blue-400 font-bold"></span>.
+                  </p>
+                  <p>
+                    Saat ini, saya aktif berkarir di <span className="text-blue-400 font-bold">iPaymu</span> (Payment Gateway), Pengalaman saya mencakup pengembangan di <span className="text-white font-medium">Ombudsman RI</span> hingga implementasi solusi <span className="text-green-400 font-medium">IoT berbasis LoRaWAN</span>.
+                  </p>
+                  <p>
+                    Saya menggabungkan keahlian <span className="text-white">Laravel, Golang, dan Flutter</span> dengan minat mendalam pada <span className="text-purple-400 italic">AI Engineering</span> untuk menciptakan solusi digital yang inovatif dan efisien.
+                  </p>
+                </div>
+                
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
+                  <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/10 text-[10px] md:text-xs uppercase font-bold tracking-wider">
+                    <Code size={14} className="text-blue-400" /> <span>Fullstack</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/10 text-[10px] md:text-xs uppercase font-bold tracking-wider">
+                    <Terminal size={14} className="text-purple-400" /> <span>AI Enthusiast</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/10 text-[10px] md:text-xs uppercase font-bold tracking-wider">
+                    <Database size={14} className="text-green-400" /> <span>IoT Geek</span>
+                  </div>
+                </div>
               </div>
             </AnimatedContent>
           </div>
@@ -251,16 +394,7 @@ function App() {
                 <AnimatedContent key={activeTab}>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {activeTab === 0 ? projects.map((p, i) => (
-                      <div key={i} onClick={() => setSelectedProject(p)} className="cursor-pointer group">
-                        <SpotlightCard spotlightColor={p.color} className="h-full">
-                          <div className="flex flex-col h-full space-y-4">
-                            <h3 className="text-2xl font-bold mb-2 group-hover:text-blue-400 transition-colors">{p.title}</h3>
-                            <p className="text-gray-400 text-sm">{p.desc}</p>
-                            <div className="flex-grow"></div>
-                            <div className="flex flex-wrap gap-2 pt-4">{p.tech.map((t, idx) => <span key={idx} className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase">{t}</span>)}</div>
-                          </div>
-                        </SpotlightCard>
-                      </div>
+                      <ProjectCard key={p.id} project={p} onClick={handleProjectClick} />
                     )) : activeTab === 1 ? certificates.map((c, i) => (
                       <SpotlightCard key={i} spotlightColor={c.color} className="h-full">
                         <div className="flex flex-col h-full">
@@ -270,11 +404,18 @@ function App() {
                         </div>
                       </SpotlightCard>
                     )) : (
-                      <div className="col-span-full grid grid-cols-2 md:grid-cols-4 gap-6 w-full text-center">
-                         <div className="p-8 bg-white/5 rounded-2xl border border-white/10">React</div>
-                         <div className="p-8 bg-white/5 rounded-2xl border border-white/10">NestJS</div>
-                         <div className="p-8 bg-white/5 rounded-2xl border border-white/10">Go</div>
-                         <div className="p-8 bg-white/5 rounded-2xl border border-white/10">PostgreSQL</div>
+                      <div className="col-span-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 w-full">
+                         {techStack.map((tech, idx) => (
+                           <div key={idx} className="group p-6 bg-white/5 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-4 hover:bg-white/10 hover:border-blue-500/50 transition-all duration-300">
+                              <img 
+                                src={`https://skillicons.dev/icons?i=${tech.icon}`} 
+                                alt={tech.name} 
+                                className="w-12 h-12 group-hover:scale-110 transition-transform duration-300"
+                                loading="lazy"
+                              />
+                              <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors">{tech.name}</span>
+                           </div>
+                         ))}
                       </div>
                     )}
                   </div>
@@ -294,31 +435,7 @@ function App() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
                {mediaItems.map((m, i) => (
-                  <AnimatedContent key={i} distance={40} direction="vertical" delay={i * 0.1}>
-                    <a href={m.link} target="_blank" rel="noopener noreferrer" className="group block h-full">
-                        <SpotlightCard spotlightColor={m.color} className="h-full !p-5">
-                          <div className="flex flex-col h-full space-y-5">
-                            <div className="w-full aspect-video bg-white/5 rounded-xl overflow-hidden border border-white/10 relative shadow-lg">
-                               <img 
-                                 src={m.image} 
-                                 alt={m.title} 
-                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
-                               />
-                               <div className="absolute top-3 left-3 px-2 py-0.5 bg-purple-600/90 rounded text-[9px] font-black uppercase tracking-wider backdrop-blur-md">
-                                  {m.source}
-                               </div>
-                            </div>
-                            <div className="space-y-2">
-                               <h3 className="text-lg font-bold leading-tight group-hover:text-purple-400 transition-colors duration-300 line-clamp-2">{m.title}</h3>
-                               <p className="text-gray-400 text-xs md:text-sm line-clamp-3 leading-relaxed opacity-80">{m.desc}</p>
-                            </div>
-                            <div className="flex items-center gap-2 text-purple-400 text-[10px] font-black uppercase tracking-widest mt-auto group-hover:gap-3 transition-all">
-                               Baca Artikel <ArrowRight size={12} />
-                            </div>
-                          </div>
-                        </SpotlightCard>
-                    </a>
-                  </AnimatedContent>
+                  <MediaCard key={i} item={m} index={i} />
                ))}
             </div>
         </div>
@@ -359,16 +476,16 @@ function App() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Nama</label>
-                      <input required type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors" placeholder="John Doe" />
+                      <input required name="name" type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors" placeholder="John Doe" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Email</label>
-                      <input required type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors" placeholder="john@example.com" />
+                      <input required name="email" type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors" placeholder="john@example.com" />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Pesan</label>
-                    <textarea required className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors h-32 resize-none" placeholder="Tuliskan pesan Anda di sini..."></textarea>
+                    <textarea required name="message" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors h-32 resize-none" placeholder="Tuliskan pesan Anda di sini..."></textarea>
                   </div>
                   <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold transition-all transform active:scale-[0.98] shadow-lg shadow-blue-600/20">
                     Kirim Pesan
