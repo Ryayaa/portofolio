@@ -12,11 +12,11 @@ import Toast from "./components/Toast";
 import { AnimatePresence } from "framer-motion";
 import fotoProfil from "./assets/foto-profil.jpg"; 
 import imgOmbudsman from "./assets/ombudsman.jpg";
-import imgOmbudsmanSystem from "./assets/image.png";
+import imgOmbudsmanSystem from "./assets/image.webp";
 import imgPaduanSuara from "./assets/paduan-suara.jpg";
 import imgPMM4 from "./assets/pmm4.jpg";
-import imgKooperasi from "./assets/kooperasi.png";
-import imgISawit from "./assets/I-Sawit.png";
+import imgKooperasi from "./assets/kooperasi.webp";
+import imgISawit from "./assets/I-Sawit.webp";
 import imgISawitMobile from "./assets/I-Sawit Mobile.jpeg";
 import imgPreview from "./assets/preview.png";
 
