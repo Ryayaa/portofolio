@@ -28,6 +28,9 @@ const IntroVideo = lazy(() => import("./components/IntroVideo"));
 const ProjectModal = lazy(() => import("./components/ProjectModal"));
 const MusicPlayer = lazy(() => import("./components/MusicPlayer"));
 const CertificateModal = lazy(() => import("./components/CertificateModal"));
+const DevTerminal = lazy(() => import("./components/DevTerminal"));
+const PaintCanvas = lazy(() => import("./components/PaintCanvas"));
+const BrickBreaker = lazy(() => import("./components/BrickBreaker"));
 
 // Memoized Project Card Component for better performance
 const ProjectCard = React.memo(({ project, onClick }) => (
@@ -259,6 +262,9 @@ function App() {
   const [matrixActive, setMatrixActive] = useState(false);
   const [retroActive, setRetroActive] = useState(false);
   const [gravityActive, setGravityActive] = useState(false);
+  const [terminalActive, setTerminalActive] = useState(false);
+  const [paintActive, setPaintActive] = useState(false);
+  const [gameActive, setGameActive] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('lang', lang);
@@ -362,6 +368,51 @@ function App() {
             message: next 
               ? (lang === 'id' ? "🪐 Gravitasi Runtuh! Ketik gravity lagi atau klik Reset untuk memulihkan." : "🪐 Gravitasi Pulih Kembali!") 
               : (lang === 'id' ? "🪐 Gravitasi Pulih Kembali!" : "🪐 Gravity Restored!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('shell') || buffer.endsWith('terminal')) {
+        setTerminalActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "💻 Terminal Developer Terbuka!" : "💻 Developer Terminal Opened!") 
+              : (lang === 'id' ? "💻 Terminal Developer Tertutup!" : "💻 Developer Terminal Closed!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('paint') || buffer.endsWith('draw')) {
+        setPaintActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "🎨 Mode Corat-Coret Neon Aktif!" : "🎨 Neon Paint Mode Activated!") 
+              : (lang === 'id' ? "🎨 Mode Corat-Coret Neon Nonaktif!" : "🎨 Neon Paint Mode Deactivated!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('play') || buffer.endsWith('game')) {
+        setGameActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "🎮 Game Brick Breaker Dimulai!" : "🎮 Brick Breaker Game Started!") 
+              : (lang === 'id' ? "🎮 Game Brick Breaker Ditutup!" : "🎮 Brick Breaker Game Closed!"),
             type: "success"
           });
           setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
@@ -970,6 +1021,30 @@ function App() {
         type={toastConfig.type}
         onClose={() => setToastConfig(prev => ({ ...prev, isVisible: false }))} 
       />
+
+      {/* Easter Egg Modal Components */}
+      <Suspense fallback={null}>
+        {terminalActive && (
+          <DevTerminal 
+            onClose={() => setTerminalActive(false)} 
+            lang={lang} 
+            isDarkMode={isDarkMode} 
+            toggleTheme={() => setIsDarkMode(!isDarkMode)} 
+          />
+        )}
+        {paintActive && (
+          <PaintCanvas 
+            onClose={() => setPaintActive(false)} 
+            lang={lang} 
+          />
+        )}
+        {gameActive && (
+          <BrickBreaker 
+            onClose={() => setGameActive(false)} 
+            lang={lang} 
+          />
+        )}
+      </Suspense>
 
       <Suspense fallback={null}>
         <MusicPlayer />
