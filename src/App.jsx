@@ -160,6 +160,43 @@ const playTickSound = (isClick = false) => {
   }
 };
 
+const playSecretSound = () => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = window._audioCtx || new AudioContext();
+    window._audioCtx = ctx;
+    
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    
+    const now = ctx.currentTime;
+    // Classic 8-bit retro sound: C5 -> E5 -> G5 -> C6 -> E6 -> G6 -> C7
+    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 2093.00];
+    const duration = 0.07;
+    
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + i * duration);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      gain.gain.setValueAtTime(0.08, now + i * duration);
+      gain.gain.exponentialRampToValueAtTime(0.00001, now + i * duration + duration);
+      
+      osc.start(now + i * duration);
+      osc.stop(now + i * duration + duration);
+    });
+  } catch (e) {
+    // Fail silently
+  }
+};
+
 function App() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -220,6 +257,49 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('lang', lang);
+  }, [lang]);
+
+  // Konami Code Easter Egg
+  useEffect(() => {
+    const konamiCode = [
+      'arrowup', 'arrowup',
+      'arrowdown', 'arrowdown',
+      'arrowleft', 'arrowright',
+      'arrowleft', 'arrowright',
+      'b', 'a'
+    ];
+    let konamiIndex = 0;
+
+    const handleKeyDown = (e) => {
+      const key = e.key.toLowerCase();
+      if (key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          playSecretSound();
+          
+          setToastConfig({
+            isVisible: true,
+            message: lang === 'id' 
+              ? "👾 Kode Konami Berhasil! Selamat datang di Mode Rahasia Developer!" 
+              : "👾 Konami Code Activated! Welcome to Secret Developer Mode!",
+            type: "success"
+          });
+          
+          setTimeout(() => {
+            setToastConfig(prev => ({ ...prev, isVisible: false }));
+          }, 5000);
+          
+          konamiIndex = 0;
+        }
+      } else {
+        konamiIndex = key === konamiCode[0] ? 1 : 0;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [lang]);
 
   const portfolioRef = useRef(null);
