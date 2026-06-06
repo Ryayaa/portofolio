@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, lazy, useMemo, useCallback } from "react";
-import { Moon, Sun, ArrowRight, Mouse, Code, Database, Layout, Terminal, ExternalLink, Mail, Github, Linkedin, Instagram, Globe } from "lucide-react";
+import { Moon, Sun, ArrowRight, Mouse, Code, Database, Layout, Terminal, ExternalLink, Mail, Github, Linkedin, Instagram, Globe, Award } from "lucide-react";
 
 import TextType from "./components/TextType";
 import ProfileCard from "./components/ProfileCard"; 
@@ -31,6 +31,8 @@ const CertificateModal = lazy(() => import("./components/CertificateModal"));
 const DevTerminal = lazy(() => import("./components/DevTerminal"));
 const PaintCanvas = lazy(() => import("./components/PaintCanvas"));
 const BrickBreaker = lazy(() => import("./components/BrickBreaker"));
+const NekoCat = lazy(() => import("./components/NekoCat"));
+const EggTracker = lazy(() => import("./components/EggTracker"));
 
 // Memoized Project Card Component for better performance
 const ProjectCard = React.memo(({ project, onClick }) => (
@@ -209,6 +211,8 @@ function App() {
     restDelta: 0.001
   });
 
+  const mainWrapperRef = useRef(null);
+
 
 
   // Global sound interaction listener
@@ -265,6 +269,50 @@ function App() {
   const [terminalActive, setTerminalActive] = useState(false);
   const [paintActive, setPaintActive] = useState(false);
   const [gameActive, setGameActive] = useState(false);
+  const [nekoActive, setNekoActive] = useState(false);
+  const [tiltActive, setTiltActive] = useState(false);
+  const [trackerOpen, setTrackerOpen] = useState(false);
+  const [unlockedEggs, setUnlockedEggs] = useState(() => {
+    try {
+      const saved = localStorage.getItem('unlocked_eggs');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  const unlockEgg = useCallback((id) => {
+    setUnlockedEggs(prev => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      localStorage.setItem('unlocked_eggs', JSON.stringify(next));
+      
+      // Play extra achievement unlocked retro chime!
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          const ctx = window._audioCtx || new AudioContext();
+          window._audioCtx = ctx;
+          if (ctx.state === 'suspended') ctx.resume();
+          const now = ctx.currentTime;
+          [1046.50, 1318.51, 1567.98].forEach((f, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, now + i * 0.05);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            gain.gain.setValueAtTime(0.04, now + i * 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.00001, now + i * 0.05 + 0.1);
+            osc.start(now + i * 0.05);
+            osc.stop(now + i * 0.05 + 0.1);
+          });
+        }
+      } catch (e) {}
+      
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('lang', lang);
@@ -287,6 +335,7 @@ function App() {
         konamiIndex++;
         if (konamiIndex === konamiCode.length) {
           playSecretSound();
+          unlockEgg('konami');
           
           setToastConfig({
             isVisible: true,
@@ -330,6 +379,7 @@ function App() {
       }
 
       if (buffer.endsWith('matrix')) {
+        unlockEgg('matrix');
         setMatrixActive(prev => {
           const next = !prev;
           playSecretSound();
@@ -345,6 +395,7 @@ function App() {
         });
         buffer = '';
       } else if (buffer.endsWith('retro')) {
+        unlockEgg('retro');
         setRetroActive(prev => {
           const next = !prev;
           playSecretSound();
@@ -360,6 +411,7 @@ function App() {
         });
         buffer = '';
       } else if (buffer.endsWith('gravity') || buffer.endsWith('boom')) {
+        unlockEgg('gravity');
         setGravityActive(prev => {
           const next = !prev;
           playSecretSound();
@@ -375,6 +427,7 @@ function App() {
         });
         buffer = '';
       } else if (buffer.endsWith('shell') || buffer.endsWith('terminal')) {
+        unlockEgg('terminal');
         setTerminalActive(prev => {
           const next = !prev;
           playSecretSound();
@@ -390,6 +443,7 @@ function App() {
         });
         buffer = '';
       } else if (buffer.endsWith('paint') || buffer.endsWith('draw')) {
+        unlockEgg('paint');
         setPaintActive(prev => {
           const next = !prev;
           playSecretSound();
@@ -405,6 +459,7 @@ function App() {
         });
         buffer = '';
       } else if (buffer.endsWith('play') || buffer.endsWith('game')) {
+        unlockEgg('game');
         setGameActive(prev => {
           const next = !prev;
           playSecretSound();
@@ -413,6 +468,38 @@ function App() {
             message: next 
               ? (lang === 'id' ? "🎮 Game Brick Breaker Dimulai!" : "🎮 Brick Breaker Game Started!") 
               : (lang === 'id' ? "🎮 Game Brick Breaker Ditutup!" : "🎮 Brick Breaker Game Closed!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('neko') || buffer.endsWith('cat')) {
+        unlockEgg('neko');
+        setNekoActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "🐱 Kucing Neko Muncul! Dia akan mengejar kursor Anda." : "🐱 Neko Cat Spawned! She will chase your cursor.") 
+              : (lang === 'id' ? "🐱 Kucing Neko Pulang!" : "🐱 Neko Cat Disappeared!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('3d') || buffer.endsWith('tilt')) {
+        unlockEgg('tilt');
+        setTiltActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "📐 Mode Perspektif 3D Aktif!" : "📐 3D Perspective Mode Activated!") 
+              : (lang === 'id' ? "📐 Mode Perspektif 3D Nonaktif!" : "📐 3D Perspective Mode Deactivated!"),
             type: "success"
           });
           setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
@@ -435,6 +522,37 @@ function App() {
       document.documentElement.classList.remove("retro-mode");
     };
   }, [retroActive]);
+
+  // 3D Viewport Tilt Perspective hook
+  useEffect(() => {
+    const wrapper = mainWrapperRef.current;
+    if (!wrapper) return;
+    if (!tiltActive) {
+      wrapper.style.transform = '';
+      wrapper.style.perspective = '';
+      wrapper.style.transition = '';
+      return;
+    }
+
+    const handleMouseMove = (e) => {
+      const x = (e.clientX / window.innerWidth) - 0.5;
+      const y = (e.clientY / window.innerHeight) - 0.5;
+      
+      wrapper.style.perspective = '1500px';
+      wrapper.style.transform = `rotateX(${y * 14}deg) rotateY(${x * -14}deg)`;
+      wrapper.style.transition = 'transform 0.15s ease-out';
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (wrapper) {
+        wrapper.style.transform = '';
+        wrapper.style.perspective = '';
+        wrapper.style.transition = '';
+      }
+    };
+  }, [tiltActive]);
 
   // Gravity collapse physics animation
   useEffect(() => {
@@ -968,7 +1086,7 @@ function App() {
   }, []);
 
   return (
-    <div className="relative w-full transition-colors duration-300 bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-white font-sans overflow-x-hidden">
+    <div ref={mainWrapperRef} className="relative w-full transition-colors duration-300 bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-white font-sans overflow-x-hidden">
       
       {/* Easter Egg Overlays */}
       {matrixActive && <MatrixRain />}
@@ -1041,6 +1159,17 @@ function App() {
         {gameActive && (
           <BrickBreaker 
             onClose={() => setGameActive(false)} 
+            lang={lang} 
+          />
+        )}
+        {nekoActive && (
+          <NekoCat />
+        )}
+        {trackerOpen && (
+          <EggTracker 
+            isOpen={trackerOpen} 
+            onClose={() => setTrackerOpen(false)} 
+            unlockedEggs={unlockedEggs} 
             lang={lang} 
           />
         )}
@@ -1330,6 +1459,16 @@ function App() {
           <span>Reset Gravity</span>
         </button>
       )}
+
+      {/* Floating Achievement Tracker Button */}
+      <button
+        onClick={() => setTrackerOpen(true)}
+        className="fixed bottom-4 left-4 md:bottom-8 md:left-8 z-[120] px-4 py-3 bg-[#121212]/90 hover:bg-yellow-500/10 border border-white/10 hover:border-yellow-500/35 text-white hover:text-yellow-500 font-bold rounded-2xl shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs uppercase backdrop-blur-md"
+        title={lang === 'id' ? "Pelacak Easter Egg" : "Easter Egg Tracker"}
+      >
+        <Award className="text-yellow-500 animate-pulse" size={16} />
+        <span>🏆 {unlockedEggs.length} / 9</span>
+      </button>
     </div>
   );
 }
