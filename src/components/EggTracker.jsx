@@ -59,20 +59,20 @@ export const EASTER_EGGS = [
   { 
     id: 'card', 
     name: 'Custom ID Card Maker', 
-    hint_id: 'Ganti data kartu pengenal Lanyard Anda dengan foto dan nama Anda sendiri ("card" / "id")',
-    hint_en: 'Change your Lanyard ID Card details with your own name and photo ("card" / "id")'
+    hint_id: 'Identitas palsu? Bukan, ini kartu nama digital keren buatan sendiri untuk menyamar di kantor! (Benda berbahan plastik tipis persegi panjang di dompet Anda atau tanda pengenal)',
+    hint_en: 'A fake identity? No, it\'s a cool self-made digital badge to sneak into the office! (The thin rectangular plastic item in your wallet or a form of identification)'
   },
   { 
     id: 'shoot', 
     name: 'Code Bug Hunter Space Game', 
-    hint_id: 'Lawan kawanan bug pemrograman dalam pertempuran luar angkasa ("shoot" / "space")',
-    hint_en: 'Fight off swarms of programming bugs in a space shooter battle ("shoot" / "space")'
+    hint_id: 'Basmi musuh terbesar developer di luar angkasa! Aksi menarik pelatuk senjata atau tempat hampa tak berujung di antara bintang-bintang dalam bahasa Inggris.',
+    hint_en: 'Exterminate the developer\'s worst nightmare in outer space! The action of pulling a gun trigger or the endless black void between stars in English.'
   },
   { 
     id: 'synth', 
     name: 'Keyboard Music Synthesizer', 
-    hint_id: 'Ubah keyboard Anda menjadi piano elektronik yang menyala ("piano" / "synth")',
-    hint_en: 'Transform your keyboard keys into a glowing electronic piano synthesizer ("piano" / "synth")'
+    hint_id: 'Ubah keyboard Anda menjadi alat musik tuts klasik pembawa harmoni indah, atau versi elektronik modern yang penuh modifikasi suara dalam bahasa Inggris.',
+    hint_en: 'Turn your keyboard keys into a classical keyed instrument that creates beautiful harmony, or its modern electronic counterpart used for sound modification in English.'
   }
 ];
 
