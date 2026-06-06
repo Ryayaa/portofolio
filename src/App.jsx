@@ -19,7 +19,6 @@ import imgPMM4 from "./assets/pmm4.webp";
 import imgKooperasi from "./assets/kooperasi.webp";
 import imgISawit from "./assets/I-Sawit.webp";
 import imgISawitMobile from "./assets/I-Sawit Mobile.jpeg";
-import imgPreview from "./assets/preview.png";
 import imgIPaymu from "./assets/ipaymu.webp";
 
 // Lazy Load Heavy Components
