@@ -1478,13 +1478,20 @@ function App() {
         </div>
       </footer>
 
-      {/* Floating Reset Gravity Button */}
-      {gravityActive && (
+      {/* Floating Reset Easter Eggs Button */}
+      {(matrixActive || retroActive || gravityActive || nekoActive || tiltActive) && (
         <button
-          onClick={() => setGravityActive(false)}
-          className="fixed bottom-36 right-4 md:bottom-8 md:right-28 z-[100] px-4 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs uppercase"
+          onClick={() => {
+            setMatrixActive(false);
+            setRetroActive(false);
+            setGravityActive(false);
+            setNekoActive(false);
+            setTiltActive(false);
+            playTickSound(true);
+          }}
+          className="fixed bottom-36 right-4 md:bottom-8 md:right-28 z-[100] px-5 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs uppercase"
         >
-          <span>Reset Gravity</span>
+          <span>{lang === 'id' ? 'Matikan Mode Rahasia ❌' : 'Disable Secret Modes ❌'}</span>
         </button>
       )}
 
