@@ -1,16 +1,23 @@
 .card-spotlight {
   position: relative;
   border-radius: 1.5rem;
-  border: 1px solid #262626; /* Sedikit lebih terang dari #222 */
-  background-color: #0a0a0a; /* Sesuaikan dengan bg web */
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
   padding: 2rem;
   overflow: hidden;
   --mouse-x: 50%;
   --mouse-y: 50%;
-  --spotlight-color: rgba(255, 255, 255, 0.05);
+  --spotlight-color: rgba(0, 0, 0, 0.02);
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.dark .card-spotlight {
+  border: 1px solid #262626;
+  background-color: #0a0a0a;
+  --spotlight-color: rgba(255, 255, 255, 0.05);
 }
 
 .card-spotlight::before {

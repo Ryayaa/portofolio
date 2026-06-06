@@ -25,7 +25,7 @@ export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], 
   return (
     <div className="lanyard-wrapper" style={{ width: '100%', height: '100%' }}>
       <Canvas
-        camera={{ position: position, fov: fov }}
+        camera={{ position: isMobile ? [0, 0, 25] : position, fov: isMobile ? 24 : fov }}
         dpr={[1, 1.5]}
         gl={{ alpha: true, antialias: true }}
       >

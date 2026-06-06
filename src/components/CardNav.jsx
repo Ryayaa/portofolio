@@ -23,7 +23,9 @@ const CardNav = ({
   const calculateHeight = () => {
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
     if (isMobile) {
-      return 60 + (items.length * 85) + 20; 
+      const contentEl = navRef.current?.querySelector('.card-nav-content');
+      const contentHeight = contentEl ? contentEl.scrollHeight : (items.length * 90);
+      return 60 + contentHeight + 20; 
     }
     return 300; 
   };

@@ -13,8 +13,14 @@ const TECH_DATA = [
     status: "Advanced",
     color: "#61dafb",
     colorRgba: "rgba(97, 218, 251, 0.15)",
-    desc: "Membangun SPA & SSR interaktif dengan R3F (React Three Fiber), GSAP, & state management modern.",
-    project: "Personal Portfolio, Lanyard 3D"
+    desc: {
+      id: "Membangun SPA & SSR interaktif dengan R3F (React Three Fiber), GSAP, & state management modern.",
+      en: "Building interactive SPAs & SSR with R3F (React Three Fiber), GSAP, & modern state management."
+    },
+    project: {
+      id: "Personal Portfolio, Lanyard 3D",
+      en: "Personal Portfolio, 3D Lanyard"
+    }
   },
   {
     name: "Next.js",
@@ -24,8 +30,14 @@ const TECH_DATA = [
     status: "Advanced",
     color: "#ffffff",
     colorRgba: "rgba(255, 255, 255, 0.15)",
-    desc: "Pengembangan web app berskala besar dengan App Router, SSR/ISR, & routing performa tinggi.",
-    project: "Kooperasi.com SaaS Platform"
+    desc: {
+      id: "Pengembangan web app berskala besar dengan App Router, SSR/ISR, & routing performa tinggi.",
+      en: "Large-scale web app development with App Router, SSR/ISR, & high-performance routing."
+    },
+    project: {
+      id: "Kooperasi.com SaaS Platform",
+      en: "Kooperasi.com SaaS Platform"
+    }
   },
   {
     name: "Tailwind CSS",
@@ -35,8 +47,14 @@ const TECH_DATA = [
     status: "Expert",
     color: "#38bdf8",
     colorRgba: "rgba(56, 189, 248, 0.15)",
-    desc: "Desain antarmuka responsif dan animatif dengan utilitas kelas v4 & kustomisasi penuh.",
-    project: "Seluruh Tampilan Website"
+    desc: {
+      id: "Desain antarmuka responsif dan animatif dengan utilitas kelas v4 & kustomisasi penuh.",
+      en: "Responsive and animated interface design with v4 utility classes & full customization."
+    },
+    project: {
+      id: "Seluruh Tampilan Website",
+      en: "All Website Interfaces"
+    }
   },
   {
     name: "Laravel",
@@ -46,8 +64,14 @@ const TECH_DATA = [
     status: "Advanced",
     color: "#ff2d20",
     colorRgba: "rgba(255, 45, 32, 0.15)",
-    desc: "Pembuatan REST API tangguh, arsitektur MVC, Filament Admin Panel v3, & integrasi database.",
-    project: "Sistem Informasi Ombudsman"
+    desc: {
+      id: "Pembuatan REST API tangguh, arsitektur MVC, Filament Admin Panel v3, & integrasi database.",
+      en: "Building robust REST APIs, MVC architecture, Filament Admin Panel v3, & database integration."
+    },
+    project: {
+      id: "Sistem Informasi Ombudsman",
+      en: "Ombudsman Information System"
+    }
   },
   {
     name: "NestJS",
@@ -57,8 +81,14 @@ const TECH_DATA = [
     status: "Intermediate",
     color: "#e0234e",
     colorRgba: "rgba(224, 35, 78, 0.15)",
-    desc: "Arsitektur backend scalable modular berbasis TypeScript, microservices, & integrasi REST/WebSocket.",
-    project: "Kooperasi.com Hub API"
+    desc: {
+      id: "Arsitektur backend scalable modular berbasis TypeScript, microservices, & integrasi REST/WebSocket.",
+      en: "Modular scalable backend architecture based on TypeScript, microservices, & REST/WebSocket integration."
+    },
+    project: {
+      id: "Kooperasi.com Hub API",
+      en: "Kooperasi.com Hub API"
+    }
   },
   {
     name: "Go (Golang)",
@@ -68,8 +98,14 @@ const TECH_DATA = [
     status: "Intermediate",
     color: "#00add8",
     colorRgba: "rgba(0, 173, 216, 0.15)",
-    desc: "Pengembangan high-performance microservices, concurrency (goroutines), & clean architecture.",
-    project: "High-throughput API Services"
+    desc: {
+      id: "Pengembangan high-performance microservices, concurrency (goroutines), & clean architecture.",
+      en: "Development of high-performance microservices, concurrency (goroutines), & clean architecture."
+    },
+    project: {
+      id: "High-throughput API Services",
+      en: "High-throughput API Services"
+    }
   },
   {
     name: "Python",
@@ -79,8 +115,14 @@ const TECH_DATA = [
     status: "Intermediate",
     color: "#3776ab",
     colorRgba: "rgba(55, 118, 171, 0.15)",
-    desc: "Otomasi skrip backend, pengolahan data, integrasi model AI, & web scraping.",
-    project: "AI-Powered Text Classification"
+    desc: {
+      id: "Otomasi skrip backend, pengolahan data, integrasi model AI, & web scraping.",
+      en: "Backend script automation, data processing, AI model integration, & web scraping."
+    },
+    project: {
+      id: "AI-Powered Text Classification",
+      en: "AI-Powered Text Classification"
+    }
   },
   {
     name: "Flutter",
@@ -90,8 +132,14 @@ const TECH_DATA = [
     status: "Advanced",
     color: "#02569b",
     colorRgba: "rgba(2, 86, 155, 0.15)",
-    desc: "Pembuatan aplikasi mobile cross-platform (Android/iOS) dengan performa native & state management.",
-    project: "I-Sawit Mobile App"
+    desc: {
+      id: "Pembuatan aplikasi mobile cross-platform (Android/iOS) dengan performa native & state management.",
+      en: "Creating cross-platform mobile apps (Android/iOS) with native performance & state management."
+    },
+    project: {
+      id: "I-Sawit Mobile App",
+      en: "I-Sawit Mobile App"
+    }
   },
   {
     name: "PostgreSQL",
@@ -101,8 +149,14 @@ const TECH_DATA = [
     status: "Advanced",
     color: "#336791",
     colorRgba: "rgba(51, 103, 145, 0.15)",
-    desc: "Desain skema relasional kompleks, optimasi query, indexing, & manajemen transaksi data sensitif.",
-    project: "Kooperasi.com SaaS DB"
+    desc: {
+      id: "Desain skema relasional kompleks, optimasi query, indexing, & manajemen transaksi data sensitif.",
+      en: "Designing complex relational schemas, query optimization, indexing, & sensitive data transaction management."
+    },
+    project: {
+      id: "Kooperasi.com SaaS DB",
+      en: "Kooperasi.com SaaS DB"
+    }
   },
   {
     name: "MySQL",
@@ -112,8 +166,14 @@ const TECH_DATA = [
     status: "Advanced",
     color: "#00758f",
     colorRgba: "rgba(0, 117, 143, 0.15)",
-    desc: "Administrasi DB relasional, relasi antar tabel kompleks, store procedures, & integrasi Laravel.",
-    project: "Ombudsman E-Lapor DB"
+    desc: {
+      id: "Administrasi DB relasional, relasi antar tabel kompleks, store procedures, & integrasi Laravel.",
+      en: "Relational DB administration, complex table relationships, stored procedures, & Laravel integration."
+    },
+    project: {
+      id: "Ombudsman E-Lapor DB",
+      en: "Ombudsman E-Lapor DB"
+    }
   },
   {
     name: "Firebase",
@@ -123,8 +183,14 @@ const TECH_DATA = [
     status: "Intermediate",
     color: "#ffca28",
     colorRgba: "rgba(255, 202, 40, 0.15)",
-    desc: "Integrasi Realtime Database, Firestore, Authentication, & FCM (Firebase Cloud Messaging).",
-    project: "I-Sawit IoT Realtime Data Sync"
+    desc: {
+      id: "Integrasi Realtime Database, Firestore, Authentication, & FCM (Firebase Cloud Messaging).",
+      en: "Realtime Database integration, Firestore, Authentication, & FCM (Firebase Cloud Messaging)."
+    },
+    project: {
+      id: "I-Sawit IoT Realtime Data Sync",
+      en: "I-Sawit IoT Realtime Data Sync"
+    }
   },
   {
     name: "Docker",
@@ -134,8 +200,14 @@ const TECH_DATA = [
     status: "Intermediate",
     color: "#2496ed",
     colorRgba: "rgba(36, 150, 237, 0.15)",
-    desc: "Konteinerisasi aplikasi untuk portabilitas penuh, orkestrasi local dev, & deployment pipeline.",
-    project: "DevOps Containerization"
+    desc: {
+      id: "Konteinerisasi aplikasi untuk portabilitas penuh, orkestrasi local dev, & deployment pipeline.",
+      en: "Application containerization for full portability, local dev orchestration, & deployment pipelines."
+    },
+    project: {
+      id: "DevOps Containerization",
+      en: "DevOps Containerization"
+    }
   }
 ];
 
@@ -154,7 +226,20 @@ const getCategoryIcon = (category) => {
   }
 };
 
-const SkillsShowcase = () => {
+const STATUS_LABELS = {
+  id: {
+    Advanced: "Mahir",
+    Expert: "Ahli",
+    Intermediate: "Menengah",
+  },
+  en: {
+    Advanced: "Advanced",
+    Expert: "Expert",
+    Intermediate: "Intermediate",
+  }
+};
+
+const SkillsShowcase = ({ lang = 'en' }) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
@@ -165,7 +250,7 @@ const SkillsShowcase = () => {
   return (
     <div className="w-full flex flex-col items-center">
       {/* Categories Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-10 max-w-3xl px-4 py-2 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl">
+      <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-10 max-w-3xl px-4 py-2 bg-black/5 dark:bg-white/5 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-2xl">
         {CATEGORIES.map((category) => {
           const isActive = selectedCategory === category;
           return (
@@ -175,11 +260,11 @@ const SkillsShowcase = () => {
               className={`relative px-4 py-2 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-2 cursor-pointer ${
                 isActive
                   ? "text-white"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
               }`}
             >
               {getCategoryIcon(category)}
-              <span className="relative z-10">{category}</span>
+              <span className="relative z-10">{category === "All" ? (lang === 'id' ? "Semua" : "All") : category}</span>
               {isActive && (
                 <motion.div
                   layoutId="activeCategoryBg"
@@ -208,9 +293,9 @@ const SkillsShowcase = () => {
               transition={{ duration: 0.3 }}
               onMouseEnter={() => setHoveredSkill(tech.name)}
               onMouseLeave={() => setHoveredSkill(null)}
-              className="relative group p-6 rounded-2xl bg-white/5 border border-white/10 overflow-hidden backdrop-blur-sm transition-all duration-300 hover:bg-white/10 cursor-pointer"
+              className="relative group p-6 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 overflow-hidden backdrop-blur-sm transition-all duration-300 hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer"
               style={{
-                borderColor: hoveredSkill === tech.name ? `${tech.color}40` : "rgba(255, 255, 255, 0.1)",
+                borderColor: hoveredSkill === tech.name ? `${tech.color}40` : undefined,
                 boxShadow: hoveredSkill === tech.name 
                   ? `0 10px 30px -10px ${tech.colorRgba}, inset 0 0 12px 1px ${tech.colorRgba}`
                   : "none"
@@ -227,7 +312,7 @@ const SkillsShowcase = () => {
                 {/* Tech Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white/5 border border-white/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                    <div className="p-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
                       <img
                         src={`https://skillicons.dev/icons?i=${tech.icon}`}
                         alt={tech.name}
@@ -236,8 +321,8 @@ const SkillsShowcase = () => {
                       />
                     </div>
                     <div>
-                      <h3 className="text-base font-black text-white leading-tight">{tech.name}</h3>
-                      <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">
+                      <h3 className="text-base font-black text-gray-900 dark:text-white leading-tight">{tech.name}</h3>
+                      <span className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-500 tracking-wider">
                         {tech.category}
                       </span>
                     </div>
@@ -246,22 +331,22 @@ const SkillsShowcase = () => {
                     className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider backdrop-blur-md"
                     style={{ backgroundColor: `${tech.color}20`, color: tech.color }}
                   >
-                    {tech.status}
+                    {STATUS_LABELS[lang]?.[tech.status] || tech.status}
                   </span>
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-400 text-xs leading-relaxed min-h-[48px]">
-                  {tech.desc}
+                <p className="text-gray-600 dark:text-gray-400 text-xs leading-relaxed min-h-[48px]">
+                  {tech.desc[lang] || tech.desc['en']}
                 </p>
 
                 {/* Animated Level Bar */}
                 <div className="space-y-1.5 pt-2">
                   <div className="flex justify-between items-center text-[10px] font-bold">
-                    <span className="text-gray-500 uppercase tracking-widest">Proficiency</span>
+                    <span className="text-gray-600 dark:text-gray-500 uppercase tracking-widest">{lang === 'id' ? "Kemahiran" : "Proficiency"}</span>
                     <span style={{ color: tech.color }}>{tech.level}%</span>
                   </div>
-                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                  <div className="h-1.5 w-full bg-black/5 dark:bg-white/5 rounded-full overflow-hidden border border-black/5 dark:border-white/5">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${tech.level}%` }}
@@ -277,10 +362,10 @@ const SkillsShowcase = () => {
 
                 {/* Project association link badge */}
                 {tech.project && (
-                  <div className="flex items-center gap-1.5 pt-3 border-t border-white/5 text-[9px] font-black uppercase text-gray-500 group-hover:text-gray-300 transition-colors">
+                  <div className="flex items-center gap-1.5 pt-3 border-t border-black/5 dark:border-white/5 text-[9px] font-black uppercase text-gray-600 dark:text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-300 transition-colors">
                     <CheckCircle2 size={10} style={{ color: tech.color }} />
                     <span className="truncate max-w-[200px]">
-                      {tech.project}
+                      {tech.project[lang] || tech.project['en']}
                     </span>
                   </div>
                 )}

@@ -23,11 +23,17 @@
   display: flex;
   position: relative;
   transform: translate3d(0, 0, 0.01px);
-  background: rgba(255, 255, 255, 0.05); /* Sedikit background glass */
+  background: rgba(0, 0, 0, 0.03); /* Sedikit background glass gelap di mode terang */
   border-radius: 100vw;
   padding: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(10px);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.dark .gooey-nav-container nav {
+  background: rgba(255, 255, 255, 0.05); /* Kembalikan ke glass putih di mode gelap */
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .gooey-nav-container nav ul {
@@ -38,7 +44,12 @@
   margin: 0;
   position: relative;
   z-index: 3;
-  color: #a1a1aa; /* Text Gray-400 */
+  color: #4b5563; /* Text Gray-600 di mode terang */
+  transition: color 0.3s;
+}
+
+.dark .gooey-nav-container nav ul {
+  color: #a1a1aa; /* Text Gray-400 di mode gelap */
 }
 
 .gooey-nav-container nav ul li {
@@ -160,4 +171,15 @@
   65% { transform: scale(var(--scale)); opacity: 1; animation-timing-function: ease; }
   85% { transform: scale(var(--scale)); opacity: 1; }
   100% { transform: scale(0); opacity: 0; }
+}
+
+@media (max-width: 480px) {
+  .gooey-nav-container nav ul {
+    gap: 0.25em;
+    padding: 0 0.5em;
+  }
+  .gooey-nav-container nav ul li a {
+    padding: 0.5em 0.8em;
+    font-size: 0.8rem;
+  }
 }

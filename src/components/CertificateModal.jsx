@@ -2,8 +2,18 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Calendar, Award } from 'lucide-react';
 
-const CertificateModal = React.memo(({ certificate, isOpen, onClose }) => {
+const CertificateModal = React.memo(({ certificate, isOpen, onClose, lang = 'id' }) => {
   if (!certificate) return null;
+
+  const t = {
+    credential: lang === 'id' ? 'Sertifikat Kredensial' : 'Credential Certificate',
+    issuer: lang === 'id' ? 'Penerbit' : 'Issuer',
+    gradYear: lang === 'id' ? 'Tahun Kelulusan' : 'Graduation Year',
+    note: lang === 'id' 
+      ? 'Sertifikat ini diperoleh setelah menyelesaikan kurikulum pelatihan terstruktur dan menyelesaikan proyek/ujian kelulusan yang dinilai langsung oleh tim instruktur.'
+      : 'This certificate was obtained after completing a structured training curriculum and passing projects/exams evaluated directly by instructors.',
+    viewPdf: lang === 'id' ? 'Lihat PDF Sertifikat' : 'View PDF Certificate'
+  };
 
   return (
     <AnimatePresence>
@@ -50,25 +60,25 @@ const CertificateModal = React.memo(({ certificate, isOpen, onClose }) => {
               <div className="space-y-6">
                 <div>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-wider rounded-md border border-blue-500/20 mb-3">
-                    <Award size={12} /> Sertifikat Kredensial
+                    <Award size={12} /> {t.credential}
                   </span>
                   <h3 className="text-2xl md:text-3xl font-black text-white leading-tight mb-2">
                     {certificate.title}
                   </h3>
                   <p className="text-blue-400 text-sm font-semibold">
-                    Penerbit: {certificate.issuer}
+                    {t.issuer}: {certificate.issuer}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2 text-gray-400 text-xs">
                   <Calendar size={14} className="text-gray-500" />
-                  <span>Tahun Kelulusan: {certificate.date}</span>
+                  <span>{t.gradYear}: {certificate.date}</span>
                 </div>
 
                 <div className="space-y-4 text-gray-400 leading-relaxed text-sm md:text-base">
                   <p>{certificate.desc}</p>
                   <p className="text-xs text-gray-500 italic border-l-2 border-blue-500/50 pl-3">
-                    Sertifikat ini diperoleh setelah menyelesaikan kurikulum pelatihan terstruktur dan menyelesaikan proyek/ujian kelulusan yang dinilai langsung oleh tim instruktur.
+                    {t.note}
                   </p>
                 </div>
               </div>
@@ -80,7 +90,7 @@ const CertificateModal = React.memo(({ certificate, isOpen, onClose }) => {
                   rel="noopener noreferrer" 
                   className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg shadow-blue-600/20 text-sm uppercase tracking-wider cursor-pointer"
                 >
-                  <ExternalLink size={16} /> Lihat PDF Sertifikat
+                  <ExternalLink size={16} /> {t.viewPdf}
                 </a>
               </div>
             </div>
