@@ -1463,7 +1463,7 @@ function App() {
       {/* Floating Achievement Tracker Button */}
       <button
         onClick={() => setTrackerOpen(true)}
-        className="fixed bottom-4 left-4 md:bottom-8 md:left-8 z-[120] px-4 py-3 bg-[#121212]/90 hover:bg-yellow-500/10 border border-white/10 hover:border-yellow-500/35 text-white hover:text-yellow-500 font-bold rounded-2xl shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs uppercase backdrop-blur-md"
+        className="fixed bottom-24 left-4 md:bottom-28 md:left-8 z-[120] px-4 py-3 bg-[#121212]/90 hover:bg-yellow-500/10 border border-white/10 hover:border-yellow-500/35 text-white hover:text-yellow-500 font-bold rounded-2xl shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs uppercase backdrop-blur-md"
         title={lang === 'id' ? "Pelacak Easter Egg" : "Easter Egg Tracker"}
       >
         <Award className="text-yellow-500 animate-pulse" size={16} />
