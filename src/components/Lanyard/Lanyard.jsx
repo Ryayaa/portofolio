@@ -8,18 +8,150 @@ import * as THREE from 'three';
 
 import cardGLB from './card.glb';
 import lanyardTexture from './lanyard.png';
+import fotoProfil from '../../assets/foto-profil.jpg';
 import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
+// Custom hook to create a canvas texture for custom ID cards
+function useCardTexture(cardData) {
+  const [texture, setTexture] = useState(null);
+
+  useEffect(() => {
+    if (!cardData) {
+      setTexture(null);
+      return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 768;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Background
+    ctx.fillStyle = '#07070a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Tech grid lines
+    ctx.strokeStyle = 'rgba(37, 99, 235, 0.12)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < canvas.width; i += 32) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, canvas.height);
+      ctx.stroke();
+    }
+    for (let j = 0; j < canvas.height; j += 32) {
+      ctx.beginPath();
+      ctx.moveTo(0, j);
+      ctx.lineTo(canvas.width, j);
+      ctx.stroke();
+    }
+
+    // Glow Border
+    ctx.strokeStyle = '#2563eb';
+    ctx.lineWidth = 10;
+    ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+
+    const drawText = () => {
+      // Header
+      ctx.fillStyle = '#2563eb';
+      ctx.font = 'bold 24px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('ARRYA DEV ID', canvas.width / 2, 70);
+
+      // Name
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 34px sans-serif';
+      ctx.textAlign = 'center';
+      const name = cardData.name || 'GUEST EXPLORER';
+      ctx.fillText(name.toUpperCase(), canvas.width / 2, 430);
+
+      // Role
+      ctx.fillStyle = '#60a5fa';
+      ctx.font = 'bold 20px monospace';
+      const role = cardData.role || 'VISITOR';
+      ctx.fillText(role.toUpperCase(), canvas.width / 2, 470);
+
+      // Details
+      ctx.fillStyle = '#4b5563';
+      ctx.font = '14px monospace';
+      ctx.fillText('EXPIRES: 12/2030', canvas.width / 2, 580);
+      ctx.fillText('STATUS: UNLOCKED', canvas.width / 2, 615);
+
+      // Barcode simulation
+      ctx.fillStyle = '#ffffff';
+      for (let i = 90; i < canvas.width - 90; i += Math.random() * 8 + 3) {
+        ctx.fillRect(i, 660, Math.random() * 3.5 + 1.5, 45);
+      }
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.needsUpdate = true;
+      setTexture(tex);
+    };
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = cardData.avatar || fotoProfil;
+    img.onload = () => {
+      // Draw rounded photo
+      ctx.save();
+      const photoX = canvas.width / 2 - 90;
+      const photoY = 150;
+      const photoW = 180;
+      const photoH = 180;
+
+      ctx.beginPath();
+      ctx.roundRect(photoX, photoY, photoW, photoH, 20);
+      ctx.clip();
+      ctx.drawImage(img, photoX, photoY, photoW, photoH);
+      ctx.restore();
+
+      // Photo frame border
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.roundRect(photoX, photoY, photoW, photoH, 20);
+      ctx.stroke();
+
+      drawText();
+    };
+    img.onerror = () => {
+      // Draw placeholder
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.roundRect(canvas.width / 2 - 90, 150, 180, 180, 20);
+      ctx.fill();
+      drawText();
+    };
+
+  }, [cardData]);
+
+  return texture;
+}
+
 export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], fov = 20, transparent = true }) {
   const [isMobile, setIsMobile] = useState(false);
+  const [cardData, setCardData] = useState(null);
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    
+    // Listen for custom card updates
+    const handleUpdate = () => {
+      setCardData(window._customCardData || null);
+    };
+    window.addEventListener('custom-card-update', handleUpdate);
+    handleUpdate();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('custom-card-update', handleUpdate);
+    };
   }, []);
 
   return (
@@ -32,7 +164,7 @@ export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], 
         <ambientLight intensity={Math.PI} />
         <Suspense fallback={null}>
           <Physics gravity={gravity} interpolate={false}>
-            <Band isMobile={isMobile} />
+            <Band isMobile={isMobile} cardData={cardData} />
           </Physics>
           <Environment blur={0.75}>
             <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
@@ -45,7 +177,7 @@ export default function Lanyard({ position = [0, 0, 20], gravity = [0, -40, 0], 
   );
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardData = null }) {
   const { size } = useThree();
   const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef();
   const vec = new THREE.Vector3(), ang = new THREE.Vector3(), rot = new THREE.Vector3(), dir = new THREE.Vector3();
@@ -53,6 +185,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   
   const { nodes, materials } = useGLTF(cardGLB);
   const texture = useTexture(lanyardTexture);
+  const customCardTex = useCardTexture(cardData);
   
   const [curve] = useState(() => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]));
   const [dragged, drag] = useState(false);
@@ -120,7 +253,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
           >
             <mesh geometry={nodes.card.geometry} frustumCulled={false}>
               <meshPhysicalMaterial 
-                map={materials.base.map} 
+                map={customCardTex || materials.base.map} 
                 map-anisotropy={16} 
                 clearcoat={1} 
                 roughness={0.3} 

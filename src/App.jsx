@@ -33,6 +33,9 @@ const PaintCanvas = lazy(() => import("./components/PaintCanvas"));
 const BrickBreaker = lazy(() => import("./components/BrickBreaker"));
 const NekoCat = lazy(() => import("./components/NekoCat"));
 const EggTracker = lazy(() => import("./components/EggTracker"));
+const CardCustomizer = lazy(() => import("./components/CardCustomizer"));
+const BugHunter = lazy(() => import("./components/BugHunter"));
+const MusicSynth = lazy(() => import("./components/MusicSynth"));
 
 // Memoized Project Card Component for better performance
 const ProjectCard = React.memo(({ project, onClick }) => (
@@ -272,6 +275,9 @@ function App() {
   const [nekoActive, setNekoActive] = useState(false);
   const [tiltActive, setTiltActive] = useState(false);
   const [trackerOpen, setTrackerOpen] = useState(false);
+  const [customizerActive, setCustomizerActive] = useState(false);
+  const [shootActive, setShootActive] = useState(false);
+  const [synthActive, setSynthActive] = useState(false);
   const [unlockedEggs, setUnlockedEggs] = useState(() => {
     try {
       const saved = localStorage.getItem('unlocked_eggs');
@@ -328,6 +334,9 @@ function App() {
     setNekoActive(false);
     setTiltActive(false);
     setTrackerOpen(false);
+    setCustomizerActive(false);
+    setShootActive(false);
+    setSynthActive(false);
 
     // Play click sound
     playTickSound(true);
@@ -527,6 +536,54 @@ function App() {
             message: next 
               ? (lang === 'id' ? "📐 Mode Perspektif 3D Aktif!" : "📐 3D Perspective Mode Activated!") 
               : (lang === 'id' ? "📐 Mode Perspektif 3D Nonaktif!" : "📐 3D Perspective Mode Deactivated!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('card') || buffer.endsWith('id')) {
+        unlockEgg('card');
+        setCustomizerActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "🪪 Pembuat Kartu Kustom Terbuka!" : "🪪 Custom ID Card Maker Opened!") 
+              : (lang === 'id' ? "🪪 Pembuat Kartu Kustom Ditutup!" : "🪪 Custom ID Card Maker Closed!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('shoot') || buffer.endsWith('space')) {
+        unlockEgg('shoot');
+        setShootActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "🚀 Game Bug Hunter Dimulai!" : "🚀 Bug Hunter Game Started!") 
+              : (lang === 'id' ? "🚀 Game Bug Hunter Ditutup!" : "🚀 Bug Hunter Game Closed!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('piano') || buffer.endsWith('synth')) {
+        unlockEgg('synth');
+        setSynthActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "🎹 Mode Synthesizer Piano Aktif! Tekan A, S, D... di keyboard." : "🎹 Piano Synthesizer Active! Play A, S, D... on your keyboard.") 
+              : (lang === 'id' ? "🎹 Mode Synthesizer Piano Nonaktif!" : "🎹 Piano Synthesizer Deactivated!"),
             type: "success"
           });
           setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
@@ -1192,6 +1249,24 @@ function App() {
         {nekoActive && (
           <NekoCat />
         )}
+        {customizerActive && (
+          <CardCustomizer 
+            onClose={() => setCustomizerActive(false)} 
+            lang={lang} 
+          />
+        )}
+        {shootActive && (
+          <BugHunter 
+            onClose={() => setShootActive(false)} 
+            lang={lang} 
+          />
+        )}
+        {synthActive && (
+          <MusicSynth 
+            onClose={() => setSynthActive(false)} 
+            lang={lang} 
+          />
+        )}
         {trackerOpen && (
           <EggTracker 
             isOpen={trackerOpen} 
@@ -1479,7 +1554,7 @@ function App() {
       </footer>
 
       {/* Floating Reset Easter Eggs Button */}
-      {(matrixActive || retroActive || gravityActive || nekoActive || tiltActive) && (
+      {(matrixActive || retroActive || gravityActive || nekoActive || tiltActive || shootActive || synthActive) && (
         <button
           onClick={() => {
             setMatrixActive(false);
@@ -1487,6 +1562,8 @@ function App() {
             setGravityActive(false);
             setNekoActive(false);
             setTiltActive(false);
+            setShootActive(false);
+            setSynthActive(false);
             playTickSound(true);
           }}
           className="fixed bottom-36 right-4 md:bottom-8 md:right-28 z-[100] px-5 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs uppercase"
@@ -1502,7 +1579,7 @@ function App() {
         title={lang === 'id' ? "Pelacak Easter Egg" : "Easter Egg Tracker"}
       >
         <Award className="text-yellow-500 animate-pulse" size={16} />
-        <span>🏆 {unlockedEggs.length} / 9</span>
+        <span>🏆 {unlockedEggs.length} / 12</span>
       </button>
     </div>
   );

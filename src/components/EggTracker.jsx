@@ -55,6 +55,24 @@ export const EASTER_EGGS = [
     name: '3D Viewport Tilt', 
     hint_id: 'Goyangkan sudut pandang situs ini secara tiga dimensi mengikuti mata Anda',
     hint_en: 'Tilt the perspective of this website three-dimensionally matching your eyes'
+  },
+  { 
+    id: 'card', 
+    name: 'Custom ID Card Maker', 
+    hint_id: 'Ganti data kartu pengenal Lanyard Anda dengan foto dan nama Anda sendiri ("card" / "id")',
+    hint_en: 'Change your Lanyard ID Card details with your own name and photo ("card" / "id")'
+  },
+  { 
+    id: 'shoot', 
+    name: 'Code Bug Hunter Space Game', 
+    hint_id: 'Lawan kawanan bug pemrograman dalam pertempuran luar angkasa ("shoot" / "space")',
+    hint_en: 'Fight off swarms of programming bugs in a space shooter battle ("shoot" / "space")'
+  },
+  { 
+    id: 'synth', 
+    name: 'Keyboard Music Synthesizer', 
+    hint_id: 'Ubah keyboard Anda menjadi piano elektronik yang menyala ("piano" / "synth")',
+    hint_en: 'Transform your keyboard keys into a glowing electronic piano synthesizer ("piano" / "synth")'
   }
 ];
 
