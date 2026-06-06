@@ -221,18 +221,34 @@ function App() {
   }, [activeTab]);
 
   // Helper translations dictionary
-  const t = useMemo(() => ({
-    // Navbar
-    home: lang === 'id' ? 'Beranda' : 'Home',
-    about: lang === 'id' ? 'Tentang' : 'About Me',
-    contact: lang === 'id' ? 'Kontak' : 'Contact',
-    works: lang === 'id' ? 'Karya' : 'Works',
-    news: lang === 'id' ? 'Berita' : 'News',
-    ctaButton: lang === 'id' ? 'Hubungi Saya' : 'Contact Me',
-    
-    // Hero
-    greeting: lang === 'id' ? 'Halo, saya' : 'Hello, I am',
-    rolePrefix: lang === 'id' ? 'Seorang\u00a0' : 'A\u00a0',
+  const t = useMemo(() => {
+    const getDynamicGreeting = () => {
+      const hour = new Date().getHours();
+      if (lang === 'id') {
+        if (hour >= 4 && hour < 11) return "Selamat Pagi 🌅, saya";
+        if (hour >= 11 && hour < 15) return "Selamat Siang ☀️, saya";
+        if (hour >= 15 && hour < 18.5) return "Selamat Sore 🌇, saya";
+        return "Selamat Malam 🌙, saya";
+      } else {
+        if (hour >= 4 && hour < 12) return "Good Morning 🌅, I am";
+        if (hour >= 12 && hour < 17) return "Good Afternoon ☀️, I am";
+        if (hour >= 17 && hour < 19) return "Good Evening 🌇, I am";
+        return "Good Night 🌙, I am";
+      }
+    };
+
+    return {
+      // Navbar
+      home: lang === 'id' ? 'Beranda' : 'Home',
+      about: lang === 'id' ? 'Tentang' : 'About Me',
+      contact: lang === 'id' ? 'Kontak' : 'Contact',
+      works: lang === 'id' ? 'Karya' : 'Works',
+      news: lang === 'id' ? 'Berita' : 'News',
+      ctaButton: lang === 'id' ? 'Hubungi Saya' : 'Contact Me',
+      
+      // Hero
+      greeting: getDynamicGreeting(),
+      rolePrefix: lang === 'id' ? 'Seorang\u00a0' : 'A\u00a0',
     heroMotto: lang === 'id' ? (
       <>
         <span className="text-gray-900 dark:text-white font-semibold">Selalu belajar</span>, Selalu berkembang, <span className="text-gray-900 dark:text-white font-semibold">Selalu lebih baik</span> dari kemarin.
@@ -301,7 +317,8 @@ function App() {
     successToast: lang === 'id' ? 'Pesan Anda telah berhasil dikirim!' : 'Your message has been successfully sent!',
     errorToast: lang === 'id' ? 'Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.' : 'An error occurred while sending your message. Please try again.',
     connErrorToast: lang === 'id' ? 'Terjadi masalah koneksi. Periksa koneksi internet Anda.' : 'Connection problem occurred. Please check your internet connection.'
-  }), [lang]);
+    };
+  }, [lang]);
   
   const portfolioItems = useMemo(() => [
     { label: lang === 'id' ? "Proyek" : "Projects", href: "#certificates" },
