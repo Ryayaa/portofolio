@@ -168,6 +168,8 @@ function App() {
     restDelta: 0.001
   });
 
+
+
   // Global sound interaction listener
   useEffect(() => {
     const handleGlobalClick = (e) => {
@@ -667,6 +669,7 @@ function App() {
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 origin-left z-[100]"
         style={{ scaleX }}
       />
+
       
       {/* 2. PRELOADER */}
       {!preloaderDone && (
