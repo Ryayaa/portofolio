@@ -314,6 +314,33 @@ function App() {
     });
   }, []);
 
+  const handleResetAll = useCallback(() => {
+    localStorage.removeItem('unlocked_eggs');
+    setUnlockedEggs([]);
+    
+    // Deactivate all active modes
+    setMatrixActive(false);
+    setRetroActive(false);
+    setGravityActive(false);
+    setTerminalActive(false);
+    setPaintActive(false);
+    setGameActive(false);
+    setNekoActive(false);
+    setTiltActive(false);
+    setTrackerOpen(false);
+
+    // Play click sound
+    playTickSound(true);
+
+    // Show reset success toast
+    setToastConfig({
+      isVisible: true,
+      message: lang === 'id' ? "♻️ Semua pencapaian dan mode aktif berhasil di-reset!" : "♻️ All achievements and active modes have been reset!",
+      type: "success"
+    });
+    setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+  }, [lang]);
+
   useEffect(() => {
     localStorage.setItem('lang', lang);
   }, [lang]);
@@ -1170,6 +1197,7 @@ function App() {
             isOpen={trackerOpen} 
             onClose={() => setTrackerOpen(false)} 
             unlockedEggs={unlockedEggs} 
+            onReset={handleResetAll}
             lang={lang} 
           />
         )}

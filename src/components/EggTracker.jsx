@@ -121,7 +121,7 @@ function ConfettiEffect() {
   return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-[10]" />;
 }
 
-export default function EggTracker({ isOpen, onClose, unlockedEggs = [], lang = 'en' }) {
+export default function EggTracker({ isOpen, onClose, unlockedEggs = [], onReset, lang = 'en' }) {
   const [copied, setCopied] = useState(false);
   const [showAchievementsList, setShowAchievementsList] = useState(false);
 
@@ -211,6 +211,13 @@ export default function EggTracker({ isOpen, onClose, unlockedEggs = [], lang = 
             >
               {lang === 'id' ? 'Lihat Daftar Pencapaian' : 'View Achievements Checklist'}
             </button>
+
+            <button 
+              onClick={onReset}
+              className="text-xs text-red-500/70 hover:text-red-500 hover:underline cursor-pointer pt-2 font-mono uppercase tracking-wider block mx-auto"
+            >
+              {lang === 'id' ? 'Reset Semua Progress' : 'Reset All Progress'}
+            </button>
           </div>
         ) : (
           <>
@@ -267,6 +274,13 @@ export default function EggTracker({ isOpen, onClose, unlockedEggs = [], lang = 
                   </div>
                 );
               })}
+
+              <button
+                onClick={onReset}
+                className="w-full mt-4 py-3 bg-red-500/10 hover:bg-red-600 text-red-500 hover:text-white rounded-2xl font-bold transition-all text-xs uppercase tracking-wider cursor-pointer border border-red-500/20 hover:border-transparent flex items-center justify-center gap-2"
+              >
+                {lang === 'id' ? 'Reset Semua Pencapaian & Mode' : 'Reset Achievements & Active Modes'}
+              </button>
             </div>
           </>
         )}
