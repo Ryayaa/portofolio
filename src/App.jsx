@@ -109,7 +109,12 @@ const VisibilitySensor = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setIsVisible(true); }, { threshold: 0.01 });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.01 }
+    );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
