@@ -278,19 +278,18 @@ const SkillsShowcase = ({ lang = 'en' }) => {
       </div>
 
       {/* Skills Showcase Grid */}
-      <motion.div 
-        layout
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full px-4"
-      >
-        <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={selectedCategory}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.25, ease: "easeInOut" }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full px-4"
+        >
           {filteredSkills.map((tech) => (
-            <motion.div
-              layout
+            <div
               key={tech.name}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
               onMouseEnter={() => setHoveredSkill(tech.name)}
               onMouseLeave={() => setHoveredSkill(null)}
               className="relative group p-6 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 overflow-hidden backdrop-blur-sm transition-all duration-300 hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer"
@@ -370,10 +369,10 @@ const SkillsShowcase = ({ lang = 'en' }) => {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           ))}
-        </AnimatePresence>
-      </motion.div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };
