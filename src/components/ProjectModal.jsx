@@ -66,19 +66,27 @@ const ProjectModal = React.memo(({ project, isOpen, onClose }) => {
                   </div>
                 </div>
 
-                <div className="space-y-4 text-gray-400 leading-relaxed">
-                  <p className="text-lg text-white font-medium italic">"Tantangan utama adalah sinkronisasi data realtime dengan performa tinggi."</p>
-                  <p>{project.desc}</p>
-                  <p>Project ini dibangun dengan fokus pada skalabilitas dan kemudahan pemeliharaan kode. Mengimplementasikan arsitektur clean-code dan optimasi performa di sisi client.</p>
+                <div className="space-y-4 text-gray-400 leading-relaxed text-sm md:text-base">
+                  {project.quote && (
+                    <p className="text-lg text-white font-medium italic">"{project.quote}"</p>
+                  )}
+                  <p>{project.longDesc || project.desc}</p>
+                  {!project.longDesc && (
+                    <p>Project ini dibangun dengan fokus pada skalabilitas dan kemudahan pemeliharaan kode. Mengimplementasikan arsitektur clean-code dan optimasi performa di sisi client.</p>
+                  )}
                 </div>
 
                 <div className="pt-6 flex flex-wrap gap-4">
-                  <a href="#" className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg shadow-blue-600/20">
-                    <ExternalLink size={18} /> Live Demo
-                  </a>
-                  <a href="#" className="p-4 bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/10 transition-all active:scale-95">
-                    <Github size={20} />
-                  </a>
+                  {project.link && (
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg shadow-blue-600/20 text-sm cursor-pointer">
+                      <ExternalLink size={18} /> Live Website / Info
+                    </a>
+                  )}
+                  {project.github && (
+                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="p-4 bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/10 transition-all active:scale-95 cursor-pointer">
+                      <Github size={20} />
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

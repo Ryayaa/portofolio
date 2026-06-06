@@ -9,7 +9,8 @@ import SpotlightCard from "./components/SpotlightCard";
 import AnimatedContent from "./components/AnimatedContent"; 
 import Preloader from "./components/Preloader";
 import Toast from "./components/Toast";
-import { AnimatePresence } from "framer-motion";
+import SkillsShowcase from "./components/SkillsShowcase";
+import { AnimatePresence, motion } from "framer-motion";
 import fotoProfil from "./assets/foto-profil.jpg"; 
 import imgOmbudsman from "./assets/ombudsman.webp";
 import imgOmbudsmanSystem from "./assets/image.webp";
@@ -19,12 +20,14 @@ import imgKooperasi from "./assets/kooperasi.webp";
 import imgISawit from "./assets/I-Sawit.webp";
 import imgISawitMobile from "./assets/I-Sawit Mobile.jpeg";
 import imgPreview from "./assets/preview.png";
+import imgIPaymu from "./assets/ipaymu.webp";
 
 // Lazy Load Heavy Components
 const Lanyard = lazy(() => import("./components/Lanyard/Lanyard"));
 const IntroVideo = lazy(() => import("./components/IntroVideo"));
 const ProjectModal = lazy(() => import("./components/ProjectModal"));
 const MusicPlayer = lazy(() => import("./components/MusicPlayer"));
+const CertificateModal = lazy(() => import("./components/CertificateModal"));
 
 // Memoized Project Card Component for better performance
 const ProjectCard = React.memo(({ project, onClick }) => (
@@ -121,7 +124,8 @@ function App() {
   const [videoDone, setVideoDone] = useState(false);
   const [activeTab, setActiveTab] = useState(0); 
   const [selectedProject, setSelectedProject] = useState(null);
-  const [showToast, setShowToast] = useState(false);
+  const [selectedCertificate, setSelectedCertificate] = useState(null);
+  const [toastConfig, setToastConfig] = useState({ isVisible: false, message: '', type: 'success' });
   
   const portfolioItems = useMemo(() => [
     { label: "Projects", href: "#certificates" },
@@ -130,9 +134,49 @@ function App() {
   ], []);
 
   const projects = useMemo(() => [
-    { id: 1, title: "Sistem Informasi Ombudsman", desc: "Sistem manajemen pengaduan masyarakat (E-Lapor) dan internal Ombudsman berbasis Laravel 11 & Filament 3.", tech: ["Laravel", "Filament", "MySQL", "Tailwind"], image: imgOmbudsmanSystem, color: "rgba(0, 229, 255, 0.2)" },
-    { id: 2, title: "Kooperasi.com", desc: "Platform SaaS HUB Koperasi Digital untuk KSP & KSU di Indonesia. Dilengkapi WhatsApp Banking, eKYC, dan Credit Scoring.", tech: ["NestJS", "WhatsApp API", "PostgreSQL","NextJs"], image: imgKooperasi, color: "rgba(139, 92, 246, 0.2)" },
-    { id: 3, title: "I-Sawit", desc: "Sistem monitoring dan manajemen perkebunan sawit berbasis IoT. Memantau suhu, kelembaban, dan lokasi GPS secara realtime melalui Flutter & Firebase.", tech: ["Flutter", "Firebase", "ESP32", "LoRa"], image: imgISawit, modalImage: imgISawitMobile, color: "rgba(34, 197, 94, 0.2)" }
+    { 
+      id: 1, 
+      title: "Sistem Informasi Ombudsman", 
+      desc: "Sistem manajemen pengaduan masyarakat (E-Lapor) dan internal Ombudsman berbasis Laravel 11 & Filament 3.", 
+      tech: ["Laravel", "Filament", "MySQL", "Tailwind"], 
+      image: imgOmbudsmanSystem, 
+      color: "rgba(0, 229, 255, 0.2)",
+      quote: "Mempermudah birokrasi penanganan laporan masyarakat secara transparan dan teratur.",
+      longDesc: "Platform E-Lapor ini digunakan oleh Ombudsman RI Kantor Perwakilan Kalimantan Selatan untuk memfasilitasi pengaduan masyarakat atas dugaan maladministrasi pelayanan publik. Dilengkapi panel admin Filament 3 yang intuitif untuk pelacakan status laporan, manajemen investigasi, serta visualisasi data statistik pengaduan."
+    },
+    { 
+      id: 2, 
+      title: "Kooperasi.com", 
+      desc: "Platform SaaS HUB Koperasi Digital untuk KSP & KSU di Indonesia. Dilengkapi WhatsApp Banking, eKYC, dan Credit Scoring.", 
+      tech: ["NestJS", "WhatsApp API", "PostgreSQL", "NextJs"], 
+      image: imgKooperasi, 
+      color: "rgba(139, 92, 246, 0.2)",
+      link: "https://kooperasi.com",
+      quote: "Mendigitalkan koperasi konvensional dengan ekosistem finansial berbasis SaaS.",
+      longDesc: "Kooperasi.com mendigitalisasi operasional Koperasi Simpan Pinjam (KSP) dan Koperasi Serba Usaha (KSU). Sistem ini mengintegrasikan WhatsApp API untuk penarikan/setoran otomatis (WhatsApp Banking), verifikasi keanggotaan berbasis eKYC, serta credit scoring digital untuk menilai kelayakan kredit anggota secara realtime."
+    },
+    { 
+      id: 3, 
+      title: "I-Sawit", 
+      desc: "Sistem monitoring dan manajemen perkebunan sawit berbasis IoT. Memantau suhu, kelembaban, dan lokasi GPS secara realtime melalui Flutter & Firebase.", 
+      tech: ["Flutter", "Firebase", "ESP32", "LoRa"], 
+      image: imgISawit, 
+      modalImage: imgISawitMobile, 
+      color: "rgba(34, 197, 94, 0.2)",
+      quote: "Pemantauan perkebunan sawit secara presisi dari jarak jauh dengan jaringan sensor IoT.",
+      longDesc: "Sistem IoT terintegrasi untuk membantu pengawasan perkebunan kelapa sawit secara cerdas. Menggunakan mikrokontroler ESP32 dengan sensor kelembapan tanah, suhu udara, dan GPS Tracker yang ditransmisikan melalui modul LoRaWAN untuk mengatasi keterbatasan sinyal seluler di area perkebunan, disinkronkan secara realtime ke aplikasi Flutter."
+    },
+    { 
+      id: 4, 
+      title: "iPaymu Core Engine Migration", 
+      desc: "Migrasi sistem core payment gateway iPaymu v3 ke Golang. Mengoptimalkan pemrosesan transaksi berkecepatan tinggi, sistem antrean pesan, dan sinkronisasi webhook.", 
+      tech: ["Go", "PostgreSQL", "Docker"], 
+      image: imgIPaymu, 
+      color: "rgba(220, 38, 38, 0.2)",
+      link: "https://ipaymu.com",
+      quote: "Optimasi konkurensi tinggi dan latensi rendah untuk memproses jutaan transaksi pembayaran online.",
+      longDesc: "Mengerjakan migrasi arsitektur core payment gateway iPaymu v3 dari PHP/monolith lama ke microservices berbasis Golang. Proyek ini memfokuskan pada penanganan beban transaksi tinggi secara concurrent, meminimalkan latensi pemrosesan API, mengimplementasikan antrean pesan yang andal, sinkronisasi webhook ke merchant secara aman, serta optimasi efisiensi memori container Docker di lingkungan cloud."
+    }
   ], []);
 
   const techStack = useMemo(() => [
@@ -151,8 +195,78 @@ function App() {
   ], []);
 
   const certificates = useMemo(() => [
-    { title: "Fullstack Web Developer", issuer: "Dicoding Indonesia", date: "2024", desc: "Frontend & Backend competency.", color: "rgba(234, 179, 8, 0.2)" },
-    { title: "Architecting on AWS", issuer: "AWS", date: "2025", desc: "Cloud architecture design.", color: "rgba(249, 115, 22, 0.2)" }
+    {
+      title: "Belajar Dasar Google Cloud",
+      issuer: "Google Cloud / Dicoding Indonesia",
+      date: "2024",
+      desc: "Lulus dari kelas Belajar Dasar Google Cloud yang berfokus pada pemahaman fundamental cloud computing menggunakan Google Cloud Platform (GCP). Dalam pelatihan ini, saya mempelajari konsep layanan cloud, pengelolaan server dan jaringan, storage dan database, hingga aspek keamanan dan billing.",
+      image: "/sertif-arrya/preview google cloud.webp",
+      pdf: "/sertif-arrya/google cloud.pdf",
+      color: "rgba(66, 133, 244, 0.2)"
+    },
+    {
+      title: "Memulai Pemrograman dengan Python",
+      issuer: "Dicoding Indonesia",
+      date: "2024",
+      desc: "Menyelesaikan pelatihan dasar pemrograman Python dengan standar industri. Saya mempelajari berbagai konsep penting seperti pengolahan data, control flow, struktur data (array & matriks), hingga Object-Oriented Programming (OOP). Selain itu, saya juga memahami penggunaan berbagai tools seperti VS Code, Jupyter Notebook, serta praktik terbaik seperti PEP8 dan unit testing.",
+      image: "/sertif-arrya/preview pemprograman python.webp",
+      pdf: "/sertif-arrya/pemprograman python.pdf",
+      color: "rgba(55, 118, 171, 0.2)"
+    },
+    {
+      title: "Prompt Engineering untuk Software Developer",
+      issuer: "Dicoding Indonesia",
+      date: "2024",
+      desc: "Mengikuti pelatihan prompt engineering yang berfokus pada pemanfaatan Generative AI dalam software development. Saya mempelajari cara menyusun prompt yang efektif, berbagai pola prompt, serta penerapannya dalam meningkatkan produktivitas pengembangan software.",
+      image: "/sertif-arrya/preview prompt engineer.webp",
+      pdf: "/sertif-arrya/prompt engineer.pdf",
+      color: "rgba(168, 85, 247, 0.2)"
+    },
+    {
+      title: "Belajar Dasar Data Science",
+      issuer: "Dicoding Indonesia",
+      date: "2024",
+      desc: "Menyelesaikan pelatihan dasar data science yang mencakup pemahaman konsep data, analisis data, serta penggunaan teknologi dan tools seperti SQL, Python, dan Tableau. Saya juga mempelajari dasar machine learning serta bagaimana memanfaatkan data untuk pengambilan keputusan.",
+      image: "/sertif-arrya/preview data science.webp",
+      pdf: "/sertif-arrya/data science.pdf",
+      color: "rgba(34, 197, 94, 0.2)"
+    },
+    {
+      title: "Belajar Membuat Aplikasi Back-End dengan Python",
+      issuer: "Dicoding Indonesia",
+      date: "2024",
+      desc: "Pelatihan lanjutan untuk membangun backend RESTful API menggunakan Python. Mempelajari penanganan request-response, routing, pengelolaan database, autentikasi, serta deployment aplikasi backend.",
+      image: "/sertif-arrya/preview backend python.webp",
+      pdf: "/sertif-arrya/Backend Python.pdf",
+      color: "rgba(239, 68, 68, 0.2)"
+    },
+    {
+      title: "Belajar Dasar-Dasar AI",
+      issuer: "Dicoding Indonesia",
+      date: "2024",
+      desc: "Pengenalan dasar konsep Artificial Intelligence (AI), Machine Learning, Deep Learning, Generative AI, pemanfaatan neural networks, serta implementasi kecerdasan buatan dalam memecahkan masalah nyata.",
+      image: "/sertif-arrya/preview dasar AI.webp",
+      pdf: "/sertif-arrya/Dasar AI.pdf",
+      color: "rgba(249, 115, 22, 0.2)"
+    },
+    {
+      title: "Belajar Dasar Machine Learning",
+      issuer: "Dicoding Indonesia",
+      date: "2024",
+      desc: "Mempelajari dasar machine learning, pra-pemrosesan data (data preprocessing), algoritma supervised learning (klasifikasi, regresi), unsupervised learning (clustering), serta evaluasi performa model.",
+      image: "/sertif-arrya/preview machine learning.webp",
+      pdf: "/sertif-arrya/Machine Learning.pdf",
+      color: "rgba(234, 179, 8, 0.2)"
+    },
+    {
+      title: "Belajar Dasar UX Design",
+      issuer: "Dicoding Indonesia",
+      date: "2024",
+      desc: "Mempelajari dasar-dasar User Experience (UX) design, proses design thinking (empathize, define, ideate, prototype, test), riset pengguna, pembuatan user persona, user journey map, wireframe, hingga usability testing.",
+      image: "/sertif-arrya/preview UX design.webp",
+      pdf: "/sertif-arrya/UX Design.pdf",
+      color: "rgba(236, 72, 153, 0.2)"
+    }
   ], []);
 
   const mediaItems = useMemo(() => [
@@ -214,14 +328,16 @@ function App() {
       });
 
       if (response.ok) {
-        setShowToast(true);
+        setToastConfig({ isVisible: true, message: "Pesan Anda telah berhasil dikirim!", type: "success" });
         form.reset();
-        setTimeout(() => setShowToast(false), 4000);
+        setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
       } else {
-        alert("Oops! Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.");
+        setToastConfig({ isVisible: true, message: "Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.", type: "error" });
+        setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
       }
     } catch (error) {
-      alert("Oops! Terjadi masalah koneksi. Silakan periksa koneksi internet Anda.");
+      setToastConfig({ isVisible: true, message: "Terjadi masalah koneksi. Periksa koneksi internet Anda.", type: "error" });
+      setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
     }
   }, []);
 
@@ -255,11 +371,21 @@ function App() {
         />
       </Suspense>
 
+      {/* 3.5 CERTIFICATE MODAL */}
+      <Suspense fallback={null}>
+        <CertificateModal 
+          isOpen={!!selectedCertificate} 
+          certificate={selectedCertificate} 
+          onClose={() => setSelectedCertificate(null)} 
+        />
+      </Suspense>
+
       {/* 4. TOAST NOTIFICATION */}
       <Toast 
-        isVisible={showToast} 
-        message="Pesan Anda telah berhasil dikirim!" 
-        onClose={() => setShowToast(false)} 
+        isVisible={toastConfig.isVisible} 
+        message={toastConfig.message} 
+        type={toastConfig.type}
+        onClose={() => setToastConfig(prev => ({ ...prev, isVisible: false }))} 
       />
 
       <Suspense fallback={null}>
@@ -391,35 +517,59 @@ function App() {
             <h2 className="text-4xl font-bold mb-12">Portfolio <span className="text-blue-500">Showcase</span></h2>
             <GooeyNav items={portfolioItems} onItemClick={(index) => setActiveTab(index)} />
             <div className="w-full mt-16">
-                <AnimatedContent key={activeTab}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {activeTab === 0 ? projects.map((p, i) => (
-                      <ProjectCard key={p.id} project={p} onClick={handleProjectClick} />
-                    )) : activeTab === 1 ? certificates.map((c, i) => (
-                      <SpotlightCard key={i} spotlightColor={c.color} className="h-full">
-                        <div className="flex flex-col h-full">
-                          <h3 className="text-xl font-bold mb-1">{c.title}</h3>
-                          <p className="text-blue-400 text-sm mb-2">{c.issuer}</p>
-                          <p className="text-gray-400 text-sm">{c.desc}</p>
-                        </div>
-                      </SpotlightCard>
-                    )) : (
-                      <div className="col-span-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 w-full">
-                         {techStack.map((tech, idx) => (
-                           <div key={idx} className="group p-6 bg-white/5 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-4 hover:bg-white/10 hover:border-blue-500/50 transition-all duration-300">
-                              <img 
-                                src={`https://skillicons.dev/icons?i=${tech.icon}`} 
-                                alt={tech.name} 
-                                className="w-12 h-12 group-hover:scale-110 transition-transform duration-300"
-                                loading="lazy"
-                              />
-                              <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors">{tech.name}</span>
-                           </div>
-                         ))}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    className="w-full"
+                  >
+                    {activeTab === 2 ? (
+                      <SkillsShowcase />
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {activeTab === 0 ? projects.map((p, i) => (
+                          <ProjectCard key={p.id} project={p} onClick={handleProjectClick} />
+                        )) : certificates.map((c, i) => (
+                          <div key={i} onClick={() => setSelectedCertificate(c)} className="group flex flex-col h-full cursor-pointer">
+                            <SpotlightCard spotlightColor={c.color} className="h-full !p-5 flex flex-col justify-between">
+                              <div className="space-y-4">
+                                {/* Certificate Image Preview */}
+                                <div className="w-full aspect-[4/3] bg-white/5 rounded-xl overflow-hidden border border-white/10 relative shadow-lg">
+                                  <img 
+                                    src={c.image} 
+                                    alt={c.title} 
+                                    loading="lazy"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100" 
+                                  />
+                                </div>
+                                {/* Certificate Metadata */}
+                                <div className="space-y-1">
+                                  <h3 className="text-xl font-bold leading-tight group-hover:text-blue-400 transition-colors">{c.title}</h3>
+                                  <p className="text-blue-400 text-xs font-semibold">{c.issuer}</p>
+                                </div>
+                                <p className="text-gray-400 text-sm line-clamp-4 leading-relaxed">{c.desc}</p>
+                              </div>
+                              {/* View PDF Button */}
+                              <a 
+                                href={c.pdf} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                onClick={(e) => e.stopPropagation()}
+                                className="mt-6 w-full py-3 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white rounded-xl font-bold flex items-center justify-center gap-2 border border-blue-500/20 hover:border-transparent transition-all active:scale-[0.98] text-xs uppercase tracking-wider cursor-pointer"
+                              >
+                                <span>Lihat Sertifikat</span>
+                                <ExternalLink size={14} />
+                              </a>
+                            </SpotlightCard>
+                          </div>
+                        ))}
                       </div>
                     )}
-                  </div>
-                </AnimatedContent>
+                  </motion.div>
+                </AnimatePresence>
             </div>
         </div>
       </section>
