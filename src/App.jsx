@@ -121,6 +121,45 @@ const VisibilitySensor = ({ children }) => {
   return <div ref={ref} className="w-full h-full min-h-[10px]">{isVisible ? children : <div className="w-full h-full bg-black" />}</div>;
 };
 
+// Web Audio API Synthesized Tick/Click Sounds
+const playTickSound = (isClick = false) => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    if (isClick) {
+      // Mechanical deep click sound
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(450, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.03);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.03);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.03);
+    } else {
+      // High-pitched soft tick sound
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.012);
+      gain.gain.setValueAtTime(0.01, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.012);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.012);
+    }
+  } catch (e) {
+    // Fail silently
+  }
+};
+
 function App() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -128,6 +167,36 @@ function App() {
     damping: 30,
     restDelta: 0.001
   });
+
+  // Global sound interaction listener
+  useEffect(() => {
+    const handleGlobalClick = (e) => {
+      const target = e.target.closest('a, button, [role="button"], .cursor-pointer');
+      if (target) {
+        playTickSound(true);
+      }
+    };
+
+    const handleGlobalMouseOver = (e) => {
+      const target = e.target.closest('a, button, [role="button"], .cursor-pointer');
+      if (target) {
+        if (target !== window._lastHoveredElement) {
+          playTickSound(false);
+          window._lastHoveredElement = target;
+        }
+      } else {
+        window._lastHoveredElement = null;
+      }
+    };
+
+    window.addEventListener('click', handleGlobalClick, { passive: true });
+    window.addEventListener('mouseover', handleGlobalMouseOver, { passive: true });
+
+    return () => {
+      window.removeEventListener('click', handleGlobalClick);
+      window.removeEventListener('mouseover', handleGlobalMouseOver);
+    };
+  }, []);
 
   // 1. THEME PERSISTENCE
   const [isDarkMode, setIsDarkMode] = useState(() => {
