@@ -45,3 +45,35 @@
 .dark::-webkit-scrollbar-thumb:hover {
   background: #3f3f46;
 }
+
+/* Retro CRT Mode Styles */
+.retro-mode {
+  font-family: 'Courier New', Courier, monospace !important;
+  filter: sepia(0.25) saturate(1.4) hue-rotate(85deg) brightness(0.95) contrast(1.1);
+  text-shadow: 0 0 4px rgba(51, 255, 51, 0.4);
+}
+
+.retro-mode * {
+  font-family: 'Courier New', Courier, monospace !important;
+}
+
+.retro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+  background-size: 100% 4px, 6px 100%;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0.15;
+  animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.15; }
+  50% { opacity: 0.14; }
+  100% { opacity: 0.16; }
+}
+

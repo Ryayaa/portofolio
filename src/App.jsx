@@ -10,6 +10,7 @@ import AnimatedContent from "./components/AnimatedContent";
 import Preloader from "./components/Preloader";
 import Toast from "./components/Toast";
 import SkillsShowcase from "./components/SkillsShowcase";
+import MatrixRain from "./components/MatrixRain";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import fotoProfil from "./assets/foto-profil.jpg"; 
 import imgOmbudsman from "./assets/ombudsman.webp";
@@ -255,6 +256,10 @@ function App() {
     return saved || 'en';
   });
 
+  const [matrixActive, setMatrixActive] = useState(false);
+  const [retroActive, setRetroActive] = useState(false);
+  const [gravityActive, setGravityActive] = useState(false);
+
   useEffect(() => {
     localStorage.setItem('lang', lang);
   }, [lang]);
@@ -301,6 +306,176 @@ function App() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [lang]);
+
+  // Typing Easter Eggs Detector ("matrix", "retro", "gravity", "boom")
+  useEffect(() => {
+    let buffer = '';
+    const maxBufferLength = 20;
+
+    const handleKeyPress = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+      }
+      
+      const key = e.key.toLowerCase();
+      buffer += key;
+      if (buffer.length > maxBufferLength) {
+        buffer = buffer.slice(buffer.length - maxBufferLength);
+      }
+
+      if (buffer.endsWith('matrix')) {
+        setMatrixActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "⚡ Mode Hujan Matrix Aktif!" : "⚡ Matrix Rain Mode Activated!") 
+              : (lang === 'id' ? "⚡ Mode Hujan Matrix Nonaktif!" : "⚡ Matrix Rain Mode Deactivated!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('retro')) {
+        setRetroActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "📺 Mode Retro CRT Aktif!" : "📺 Retro CRT Mode Activated!") 
+              : (lang === 'id' ? "📺 Mode Retro CRT Nonaktif!" : "📺 Retro CRT Mode Deactivated!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('gravity') || buffer.endsWith('boom')) {
+        setGravityActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "🪐 Gravitasi Runtuh! Ketik gravity lagi atau klik Reset untuk memulihkan." : "🪐 Gravitasi Pulih Kembali!") 
+              : (lang === 'id' ? "🪐 Gravitasi Pulih Kembali!" : "🪐 Gravity Restored!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [lang]);
+
+  // Retro CRT Mode class toggle
+  useEffect(() => {
+    document.documentElement.classList.toggle("retro-mode", retroActive);
+    return () => {
+      document.documentElement.classList.remove("retro-mode");
+    };
+  }, [retroActive]);
+
+  // Gravity collapse physics animation
+  useEffect(() => {
+    if (!gravityActive) return;
+
+    const items = document.querySelectorAll('.gravity-item');
+    const physicsItems = Array.from(items).map(el => {
+      const rect = el.getBoundingClientRect();
+      return {
+        el,
+        x: 0,
+        y: 0,
+        vx: (Math.random() - 0.5) * 12,
+        vy: (Math.random() - 0.5) * 5,
+        rot: 0,
+        vrot: (Math.random() - 0.5) * 6,
+        height: rect.height,
+        width: rect.width,
+        originalBottom: rect.bottom,
+        originalLeft: rect.left,
+        settled: false
+      };
+    });
+
+    let active = true;
+    const gravity = 0.9;
+    const bounce = -0.6;
+    const friction = 0.98;
+
+    const loop = () => {
+      if (!active) return;
+      let allSettled = true;
+      
+      physicsItems.forEach(item => {
+        if (item.settled) {
+          item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, 0) rotate(${item.rot}deg)`;
+          return;
+        }
+        
+        allSettled = false;
+        
+        item.vy += gravity;
+        item.x += item.vx;
+        item.y += item.vy;
+        item.rot += item.vrot;
+        
+        item.vx *= friction;
+        item.vrot *= friction;
+        
+        const currentBottom = item.originalBottom + item.y;
+        const currentLeft = item.originalLeft + item.x;
+        
+        if (currentBottom >= window.innerHeight - 10) {
+          item.y = window.innerHeight - 10 - item.originalBottom;
+          item.vy *= bounce;
+          item.vx *= 0.7;
+          item.vrot *= 0.7;
+          
+          if (Math.abs(item.vy) < 1.5 && Math.abs(item.vx) < 0.5) {
+            item.settled = true;
+          }
+        }
+        
+        if (currentLeft <= 5) {
+          item.x = 5 - item.originalLeft;
+          item.vx *= bounce;
+        } else if (currentLeft + item.width >= window.innerWidth - 5) {
+          item.x = window.innerWidth - 5 - item.originalLeft - item.width;
+          item.vx *= bounce;
+        }
+
+        item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, 0) rotate(${item.rot}deg)`;
+        item.el.style.transition = 'none';
+        item.el.style.zIndex = '1000';
+      });
+
+      if (!allSettled) {
+        requestAnimationFrame(loop);
+      }
+    };
+
+    requestAnimationFrame(loop);
+
+    return () => {
+      active = false;
+      physicsItems.forEach(item => {
+        item.el.style.transform = '';
+        item.el.style.transition = '';
+        item.el.style.zIndex = '';
+      });
+    };
+  }, [gravityActive]);
 
   const portfolioRef = useRef(null);
   const mediaRef = useRef(null);
@@ -744,6 +919,10 @@ function App() {
   return (
     <div className="relative w-full transition-colors duration-300 bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-white font-sans overflow-x-hidden">
       
+      {/* Easter Egg Overlays */}
+      {matrixActive && <MatrixRain />}
+      {retroActive && <div className="retro-overlay" />}
+
       {/* Scroll Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 origin-left z-[100]"
@@ -837,7 +1016,7 @@ function App() {
                 <div className="space-y-4 md:space-y-6">
                   <div className="space-y-2">
                     <h2 className="text-sm md:text-xl font-medium text-blue-600 dark:text-blue-300 uppercase tracking-[0.2em] opacity-80">{t.greeting}</h2>
-                    <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight">
+                    <h1 className="gravity-item text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight">
                       Arrya <br/>
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Fitriansyah</span>
                     </h1>
@@ -868,7 +1047,7 @@ function App() {
 
             <div className="order-1 md:order-2 flex justify-center md:justify-end relative z-20">
                <AnimatedContent distance={100} direction="horizontal" delay={0.2}>
-                 <div className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] hover:scale-[1.02] transition-transform duration-500">
+                  <div className="gravity-item w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] hover:scale-[1.02] transition-transform duration-500">
                     <ProfileCard name="Arrya Fitriansyah" title="Fullstack Developer" handle="aryya_" avatarUrl={fotoProfil} onContactClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })} />
                  </div>
                </AnimatedContent>
@@ -896,7 +1075,7 @@ function App() {
               <div className="space-y-4 md:space-y-6 text-center md:text-left">
                 <div className="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full border border-blue-500/20 dark:border-blue-500/30 bg-blue-500/5 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs md:text-sm font-medium backdrop-blur-sm">{t.aboutMeTag}</div>
                 <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight">{t.aboutTitle}</h2>
-                <div className="space-y-4 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed">
+                <div className="gravity-item space-y-4 text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed">
                   {t.aboutP1}
                   {t.aboutP2}
                   {t.aboutP3}
@@ -1029,7 +1208,7 @@ function App() {
             </AnimatedContent>
  
             <AnimatedContent distance={50} direction="horizontal" reverse={true}>
-              <div className="p-8 bg-black/5 dark:bg-white/5 rounded-3xl border border-black/10 dark:border-white/10 backdrop-blur-sm shadow-2xl">
+              <div className="gravity-item p-8 bg-black/5 dark:bg-white/5 rounded-3xl border border-black/10 dark:border-white/10 backdrop-blur-sm shadow-2xl">
                 <form className="space-y-6" onSubmit={handleContactSubmit}>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -1066,6 +1245,16 @@ function App() {
           <p className="text-xs opacity-50">&copy; 2026 {t.footerSub}</p>
         </div>
       </footer>
+
+      {/* Floating Reset Gravity Button */}
+      {gravityActive && (
+        <button
+          onClick={() => setGravityActive(false)}
+          className="fixed bottom-36 right-4 md:bottom-8 md:right-28 z-[100] px-4 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs uppercase"
+        >
+          <span>Reset Gravity</span>
+        </button>
+      )}
     </div>
   );
 }
