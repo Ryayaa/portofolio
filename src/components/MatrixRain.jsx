@@ -11,23 +11,25 @@ export default function MatrixRain() {
 
     let animationFrameId;
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
     const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const alphabet = katakana.split('');
 
     const fontSize = 16;
-    const columns = Math.ceil(canvas.width / fontSize);
+    let rainDrops = [];
 
-    const rainDrops = [];
-    for (let x = 0; x < columns; x++) {
-      rainDrops[x] = Math.random() * -100;
-    }
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const columns = Math.ceil(canvas.width / fontSize);
+      while (rainDrops.length < columns) {
+        rainDrops.push(Math.random() * -100);
+      }
+      if (rainDrops.length > columns) {
+        rainDrops.length = columns;
+      }
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     const draw = () => {
       ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';

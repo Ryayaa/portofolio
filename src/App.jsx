@@ -36,6 +36,8 @@ const EggTracker = lazy(() => import("./components/EggTracker"));
 const CardCustomizer = lazy(() => import("./components/CardCustomizer"));
 const BugHunter = lazy(() => import("./components/BugHunter"));
 const MusicSynth = lazy(() => import("./components/MusicSynth"));
+const CyberGlitch = lazy(() => import("./components/CyberGlitch"));
+const Confetti = lazy(() => import("./components/Confetti"));
 
 // Memoized Project Card Component for better performance
 const ProjectCard = React.memo(({ project, onClick }) => (
@@ -278,6 +280,8 @@ function App() {
   const [customizerActive, setCustomizerActive] = useState(false);
   const [shootActive, setShootActive] = useState(false);
   const [synthActive, setSynthActive] = useState(false);
+  const [glitchActive, setGlitchActive] = useState(false);
+  const [konamiActive, setKonamiActive] = useState(false);
   const [unlockedEggs, setUnlockedEggs] = useState(() => {
     try {
       const saved = localStorage.getItem('unlocked_eggs');
@@ -337,6 +341,8 @@ function App() {
     setCustomizerActive(false);
     setShootActive(false);
     setSynthActive(false);
+    setGlitchActive(false);
+    setKonamiActive(false);
 
     // Play click sound
     playTickSound(true);
@@ -372,6 +378,7 @@ function App() {
         if (konamiIndex === konamiCode.length) {
           playSecretSound();
           unlockEgg('konami');
+          setKonamiActive(true);
           
           setToastConfig({
             isVisible: true,
@@ -584,6 +591,22 @@ function App() {
             message: next 
               ? (lang === 'id' ? "🎹 Mode Synthesizer Piano Aktif! Tekan A, S, D... di keyboard." : "🎹 Piano Synthesizer Active! Play A, S, D... on your keyboard.") 
               : (lang === 'id' ? "🎹 Mode Synthesizer Piano Nonaktif!" : "🎹 Piano Synthesizer Deactivated!"),
+            type: "success"
+          });
+          setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
+          return next;
+        });
+        buffer = '';
+      } else if (buffer.endsWith('glitch') || buffer.endsWith('hack')) {
+        unlockEgg('glitch');
+        setGlitchActive(prev => {
+          const next = !prev;
+          playSecretSound();
+          setToastConfig({
+            isVisible: true,
+            message: next 
+              ? (lang === 'id' ? "⚠️ Mode Glitch Cyberpunk Aktif! Sistem terdistorsi." : "⚠️ Cyberpunk Glitch Mode Active! System distorted.") 
+              : (lang === 'id' ? "⚠️ Mode Glitch Cyberpunk Nonaktif!" : "⚠️ Cyberpunk Glitch Mode Deactivated!"),
             type: "success"
           });
           setTimeout(() => setToastConfig(prev => ({ ...prev, isVisible: false })), 4000);
@@ -1170,7 +1193,7 @@ function App() {
   }, []);
 
   return (
-    <div ref={mainWrapperRef} className="relative w-full transition-colors duration-300 bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-white font-sans overflow-x-hidden">
+    <div ref={mainWrapperRef} className={`relative w-full transition-colors duration-300 bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-white font-sans overflow-x-hidden ${glitchActive ? 'cyber-glitch-active' : ''}`}>
       
       {/* Easter Egg Overlays */}
       {matrixActive && <MatrixRain />}
@@ -1265,6 +1288,18 @@ function App() {
           <MusicSynth 
             onClose={() => setSynthActive(false)} 
             lang={lang} 
+          />
+        )}
+        {glitchActive && (
+          <CyberGlitch 
+            onClose={() => setGlitchActive(false)} 
+            lang={lang} 
+          />
+        )}
+        {konamiActive && (
+          <Confetti 
+            duration={6000} 
+            onComplete={() => setKonamiActive(false)} 
           />
         )}
         {trackerOpen && (
@@ -1554,7 +1589,7 @@ function App() {
       </footer>
 
       {/* Floating Reset Easter Eggs Button */}
-      {(matrixActive || retroActive || gravityActive || nekoActive || tiltActive || shootActive || synthActive) && (
+      {(matrixActive || retroActive || gravityActive || nekoActive || tiltActive || shootActive || synthActive || glitchActive || konamiActive) && (
         <button
           onClick={() => {
             setMatrixActive(false);
@@ -1564,6 +1599,8 @@ function App() {
             setTiltActive(false);
             setShootActive(false);
             setSynthActive(false);
+            setGlitchActive(false);
+            setKonamiActive(false);
             playTickSound(true);
           }}
           className="fixed bottom-36 right-4 md:bottom-8 md:right-28 z-[100] px-5 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs uppercase"
@@ -1579,7 +1616,7 @@ function App() {
         title={lang === 'id' ? "Pelacak Easter Egg" : "Easter Egg Tracker"}
       >
         <Award className="text-yellow-500 animate-pulse" size={16} />
-        <span>🏆 {unlockedEggs.length} / 12</span>
+        <span>🏆 {unlockedEggs.length} / 13</span>
       </button>
     </div>
   );

@@ -73,6 +73,12 @@ export const EASTER_EGGS = [
     name: 'Keyboard Music Synthesizer', 
     hint_id: 'Ubah keyboard Anda menjadi alat musik tuts klasik pembawa harmoni indah, atau versi elektronik modern yang penuh modifikasi suara dalam bahasa Inggris.',
     hint_en: 'Turn your keyboard keys into a classical keyed instrument that creates beautiful harmony, or its modern electronic counterpart used for sound modification in English.'
+  },
+  {
+    id: 'glitch',
+    name: 'Cyberpunk Glitch Mode',
+    hint_id: 'Sistem diretas! Aktifkan mode distorsi dunia digital cyberpunk penuh dengan scanline dan layar bergetar. (Istilah bahasa Inggris untuk peretasan atau kerusakan sistem)',
+    hint_en: 'System hacked! Activate the cyberpunk digital distortion mode full of scanlines and screen flicker. (The English term for a hack or system malfunction)'
   }
 ];
 

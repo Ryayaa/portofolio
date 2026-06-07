@@ -1,0 +1,155 @@
+.cyber-glitch-overlay-container {
+  position: fixed;
+  inset: 0;
+  z-index: 140; /* Just below main modals but on top of page content */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cyber-glitch-overlay-container * {
+  pointer-events: auto; /* Re-enable click events for buttons inside the overlay */
+}
+
+/* Repeating Scanlines */
+.cyber-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.22) 50%
+  );
+  background-size: 100% 4px;
+  opacity: 0.8;
+  z-index: 141;
+}
+
+/* Cyber CRT Flicker & Vignette */
+.cyber-grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle, 
+    transparent 55%, 
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  opacity: 0.65;
+  z-index: 142;
+  animation: crt-flicker 0.15s infinite;
+}
+
+/* Static noise animation */
+.cyber-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-radial-gradient(
+    circle, 
+    rgba(239, 68, 68, 0.04), 
+    rgba(0, 0, 0, 0.05) 2px, 
+    rgba(239, 68, 68, 0.02) 4px
+  );
+  background-size: 120px 120px;
+  animation: noise-move 0.2s infinite steps(4);
+  opacity: 0.5;
+  z-index: 143;
+}
+
+/* Top Warning Banner */
+.cyber-alert-banner {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(127, 29, 29, 0.85);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  padding: 8px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(8px);
+  color: #ef4444;
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.25);
+  z-index: 145;
+  animation: banner-glow 2.5s infinite alternate;
+}
+
+/* Status Indicator Box */
+.cyber-status-box {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  background: rgba(10, 10, 10, 0.9);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  z-index: 145;
+  backdrop-filter: blur(4px);
+  user-select: none;
+}
+
+/* Close button positioning */
+.cyber-close-btn-container {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  z-index: 145;
+}
+
+/* Glitch active state on the entire portfolio wrapper */
+.cyber-glitch-active {
+  animation: cyber-screen-shake 4.5s infinite;
+}
+
+/* Keyframes */
+@keyframes crt-flicker {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.65; }
+  100% { opacity: 0.62; }
+}
+
+@keyframes noise-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 15px 15px; }
+}
+
+@keyframes banner-glow {
+  0% { 
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.1); 
+    border-color: rgba(239, 68, 68, 0.3); 
+  }
+  100% { 
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.45); 
+    border-color: rgba(239, 68, 68, 0.6); 
+  }
+}
+
+@keyframes cyber-screen-shake {
+  0%, 93%, 100% { 
+    transform: translate(0, 0) skew(0deg); 
+    filter: none; 
+  }
+  94% { 
+    transform: translate(-3px, 2px) skew(-1.5deg); 
+    filter: hue-rotate(50deg) contrast(1.25) saturate(1.3); 
+  }
+  95% { 
+    transform: translate(2px, -3px) skew(1deg); 
+    filter: invert(0.08) contrast(1.4); 
+  }
+  96% { 
+    transform: translate(-1px, 2px) skew(-2deg); 
+    filter: grayscale(0.25) saturate(1.6); 
+  }
+  97% { 
+    transform: translate(3px, -1px) skew(2deg); 
+    filter: hue-rotate(-50deg) contrast(1.35); 
+  }
+  98% { 
+    transform: translate(0, 0) skew(0deg); 
+    filter: none; 
+  }
+}

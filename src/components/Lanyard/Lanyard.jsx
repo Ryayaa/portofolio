@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import { useEffect, useRef, useState, Suspense } from 'react';
+import { useEffect, useRef, useState, Suspense, useMemo } from 'react';
 import { Canvas, extend, useThree, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
@@ -60,7 +60,12 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     }
   }, [texture]);
   
-  const [curve] = useState(() => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]));
+  const [curve] = useState(() => {
+    const c = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]);
+    c.curveType = 'chordal';
+    return c;
+  });
+  const resolution = useMemo(() => new THREE.Vector2(size.width, size.height), [size.width, size.height]);
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
@@ -106,8 +111,6 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     }
   });
 
-  curve.curveType = 'chordal';
-
   return (
     <>
       <group position={[0, 4, 0]}>
@@ -142,7 +145,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
         <meshLineMaterial 
           color="white" 
           depthTest={false} 
-          resolution={new THREE.Vector2(size.width, size.height)} 
+          resolution={resolution} 
           useMap 
           map={texture} 
           repeat={[-4, 1]} 
