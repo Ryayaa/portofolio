@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Code, Server, Smartphone, Database, Terminal, Sparkles, CheckCircle2 } from "lucide-react";
 
-const CATEGORIES = ["All", "Frontend", "Backend", "Mobile", "DB & DevOps"];
+const CATEGORIES = ["All", "Frontend", "Backend", "Mobile", "AI & ML", "DB & DevOps"];
 
 const TECH_DATA = [
   {
@@ -142,6 +142,42 @@ const TECH_DATA = [
     }
   },
   {
+    name: "TensorFlow",
+    category: "AI & ML",
+    icon: "tensorflow",
+    localIcon: "/icons/tensorflow.svg",
+    level: 75,
+    status: "Intermediate",
+    color: "#ff6f00",
+    colorRgba: "rgba(255, 111, 0, 0.15)",
+    desc: {
+      id: "Membangun & melatih model Deep Learning (NLP, Computer Vision, Time Series) serta konversi model untuk produksi.",
+      en: "Building & training Deep Learning models (NLP, Computer Vision, Time Series) and converting models for production."
+    },
+    project: {
+      id: "Deep Learning & Computer Vision Projects",
+      en: "Deep Learning & Computer Vision Projects"
+    }
+  },
+  {
+    name: "Google Cloud",
+    category: "AI & ML",
+    icon: "gcp",
+    localIcon: "/icons/gcp.svg",
+    level: 75,
+    status: "Intermediate",
+    color: "#4285f4",
+    colorRgba: "rgba(66, 133, 244, 0.15)",
+    desc: {
+      id: "Training & deployment model machine learning, Vertex AI, serta pengelolaan storage & MLOps di Google Cloud Platform.",
+      en: "Machine learning model training & deployment, Vertex AI, and storage management & MLOps on Google Cloud Platform."
+    },
+    project: {
+      id: "Applied ML on Google Cloud",
+      en: "Applied ML on Google Cloud"
+    }
+  },
+  {
     name: "PostgreSQL",
     category: "DB & DevOps",
     icon: "postgres",
@@ -219,6 +255,8 @@ const getCategoryIcon = (category) => {
       return <Server className="w-4 h-4" />;
     case "Mobile":
       return <Smartphone className="w-4 h-4" />;
+    case "AI & ML":
+      return <Terminal className="w-4 h-4" />;
     case "DB & DevOps":
       return <Database className="w-4 h-4" />;
     default:
@@ -301,37 +339,37 @@ const SkillsShowcase = ({ lang = 'en' }) => {
               }}
             >
               {/* Background ambient glow matching tech color */}
-              <div 
+              <div
                 className="absolute -top-12 -right-12 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 pointer-events-none"
                 style={{ backgroundColor: tech.color }}
               />
 
+              {/* Status badge, pinned to the corner so it never fights the title for space */}
+              <span
+                className="absolute top-4 right-4 z-10 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider backdrop-blur-md"
+                style={{ backgroundColor: `${tech.color}20`, color: tech.color }}
+              >
+                {STATUS_LABELS[lang]?.[tech.status] || tech.status}
+              </span>
+
               {/* Main Card Content */}
               <div className="flex flex-col h-full space-y-4 relative z-10">
                 {/* Tech Header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                      <img
-                        src={`https://skillicons.dev/icons?i=${tech.icon}`}
-                        alt={tech.name}
-                        className="w-10 h-10 object-contain"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-black text-gray-900 dark:text-white leading-tight">{tech.name}</h3>
-                      <span className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-500 tracking-wider">
-                        {tech.category}
-                      </span>
-                    </div>
+                <div className="flex items-center gap-3 pr-16">
+                  <div className="shrink-0 p-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                    <img
+                      src={tech.localIcon || `https://skillicons.dev/icons?i=${tech.icon}`}
+                      alt={tech.name}
+                      className="w-10 h-10 shrink-0 object-contain"
+                      loading="lazy"
+                    />
                   </div>
-                  <span 
-                    className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider backdrop-blur-md"
-                    style={{ backgroundColor: `${tech.color}20`, color: tech.color }}
-                  >
-                    {STATUS_LABELS[lang]?.[tech.status] || tech.status}
-                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-black text-gray-900 dark:text-white leading-tight">{tech.name}</h3>
+                    <span className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-500 tracking-wider">
+                      {tech.category}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Description */}

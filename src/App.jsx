@@ -885,11 +885,11 @@ function App() {
     ),
     aboutP3: lang === 'id' ? (
       <p>
-        Saya menggabungkan keahlian <span className="text-gray-900 dark:text-white font-medium">Laravel, Golang, dan Flutter</span> dengan minat mendalam pada <span className="text-purple-600 dark:text-purple-400 italic">AI Engineering</span> untuk menciptakan solusi digital yang inovatif dan efisien.
+        Saya menggabungkan keahlian <span className="text-gray-900 dark:text-white font-medium">Laravel, Golang, dan Flutter</span> dengan minat mendalam pada <span className="text-purple-600 dark:text-purple-400 italic">AI & Machine Learning Engineering</span> — mulai dari Deep Learning, MLOps, hingga penerapan AI on-device dan di aplikasi web — untuk menciptakan solusi digital yang inovatif dan efisien.
       </p>
     ) : (
       <p>
-        I combine expertise in <span className="text-gray-900 dark:text-white font-medium">Laravel, Golang, and Flutter</span> with a deep interest in <span className="text-purple-600 dark:text-purple-400 italic">AI Engineering</span> to create innovative and efficient digital solutions.
+        I combine expertise in <span className="text-gray-900 dark:text-white font-medium">Laravel, Golang, and Flutter</span> with a deep interest in <span className="text-purple-600 dark:text-purple-400 italic">AI & Machine Learning Engineering</span> — from Deep Learning and MLOps to on-device and web-based AI implementation — to create innovative and efficient digital solutions.
       </p>
     ),
     skillsTag: lang === 'id' ? 'Kemampuan' : 'Skills',
@@ -926,6 +926,7 @@ function App() {
     { label: lang === 'id' ? "Proyek" : "Projects", href: "#certificates" },
     { label: lang === 'id' ? "Sertifikat" : "Certificates", href: "#certificates" },
     { label: lang === 'id' ? "Keahlian" : "Tech Stack", href: "#techstack" },
+    { label: lang === 'id' ? "Prestasi" : "Achievements", href: "#certificates" },
   ], [lang]);
 
   const projects = useMemo(() => [
@@ -997,21 +998,6 @@ function App() {
         : "Migrating the core payment gateway architecture of iPaymu v3 from a legacy PHP monolith to Golang-based microservices. Focuses on high-concurrency transaction handling, minimizing API latency, implementing reliable message queues, securing merchant webhook delivery, and optimizing Docker container memory utilization in cloud environments."
     }
   ], [lang]);
-
-  const techStack = useMemo(() => [
-    { name: "React", icon: "react" },
-    { name: "Next.js", icon: "nextjs" },
-    { name: "Laravel", icon: "laravel" },
-    { name: "NestJS", icon: "nestjs" },
-    { name: "Go", icon: "go" },
-    { name: "Flutter", icon: "flutter" },
-    { name: "Python", icon: "py" },
-    { name: "PostgreSQL", icon: "postgres" },
-    { name: "MySQL", icon: "mysql" },
-    { name: "Tailwind", icon: "tailwind" },
-    { name: "Firebase", icon: "firebase" },
-    { name: "Docker", icon: "docker" },
-  ], []);
 
   const certificates = useMemo(() => [
     {
@@ -1101,6 +1087,147 @@ function App() {
       image: "/sertif-arrya/preview UX design.webp",
       pdf: "/sertif-arrya/UX Design.pdf",
       color: "rgba(236, 72, 153, 0.2)"
+    },
+    {
+      title: lang === 'id' ? "Belajar Fundamental Deep Learning" : "Deep Learning Fundamentals",
+      issuer: "Dicoding Indonesia",
+      date: "2026",
+      desc: lang === 'id'
+        ? "Menyelesaikan kelas fundamental deep learning (110 jam) yang berfokus pada pengolahan dan prediksi data teks serta gambar. Materi mencakup pengenalan deep learning, neural network dengan TensorFlow dan Keras, Natural Language Processing, Time Series, Image Classification, Recommendation System, Reinforcement Learning, konversi model machine learning, hingga Generative AI."
+        : "Completed a 110-hour Deep Learning Fundamentals course focused on text and image data processing and prediction. Covered deep learning basics, neural networks with TensorFlow and Keras, Natural Language Processing, Time Series, Image Classification, Recommendation Systems, Reinforcement Learning, ML model conversion, and Generative AI.",
+      image: "/sertif-arrya/preview fundamental deep learning.webp",
+      pdf: "/sertif-arrya/fundamental deep learning.pdf",
+      color: "rgba(99, 102, 241, 0.2)"
+    },
+    {
+      title: lang === 'id' ? "Belajar Penerapan Machine Learning dengan Google Cloud" : "Applied Machine Learning with Google Cloud",
+      issuer: "Dicoding Indonesia",
+      date: "2026",
+      desc: lang === 'id'
+        ? "Menyelesaikan kelas (40 jam) yang berfokus pada pembangunan aplikasi machine learning dan deployment menggunakan infrastruktur Google Cloud. Materi mencakup pengelolaan model TensorFlow di lingkungan produksi, training dan deployment ML pada Google Cloud, optimasi penyimpanan data, studi kasus aplikasi ML, hingga eksplorasi Vertex AI."
+        : "Completed a 40-hour course focused on building machine learning applications and deploying them on Google Cloud infrastructure. Covered managing TensorFlow models in production, training and deploying ML on Google Cloud, optimizing data storage, an ML application case study, and exploring Vertex AI.",
+      image: "/sertif-arrya/preview Penerapan Machine Learning dengan Google Cloud.webp",
+      pdf: "/sertif-arrya/Machine Learning dengan Google Cloud.pdf",
+      color: "rgba(66, 133, 244, 0.2)"
+    },
+    {
+      title: lang === 'id' ? "Belajar Penerapan Machine Learning untuk Flutter" : "Applied Machine Learning for Flutter",
+      issuer: "Dicoding Indonesia",
+      date: "2026",
+      desc: lang === 'id'
+        ? "Menyelesaikan kelas (60 jam) yang dirancang untuk mengintegrasikan Machine Learning ke dalam aplikasi Flutter secara on-device. Materi mencakup machine learning, fundamen cerdas, ML Kit, LiteRT, hingga Generative AI."
+        : "Completed a 60-hour course designed to integrate on-device Machine Learning into Flutter applications. Covered machine learning fundamentals, ML Kit, LiteRT, and Generative AI.",
+      image: "/sertif-arrya/preview Penerapan Machine Learning untuk Flutter.webp",
+      pdf: "/sertif-arrya/Macine Learning Flutter.pdf",
+      color: "rgba(2, 169, 244, 0.2)"
+    },
+    {
+      title: lang === 'id' ? "Belajar Dasar Manajemen Proyek" : "Project Management Fundamentals",
+      issuer: "Dicoding Indonesia",
+      date: "2026",
+      desc: lang === 'id'
+        ? "Menyelesaikan kelas (11 jam) yang memberikan fondasi wawasan sebagai manajer proyek. Materi mencakup pengenalan manajemen proyek, siklus dan metodologi manajemen proyek, struktur dan budaya organisasi, karier manajemen proyek, hingga proses menutup proyek."
+        : "Completed an 11-hour course providing a foundation for aspiring project managers. Covered project management introduction, project cycles and methodologies, organizational structure and culture, project management careers, and project closure.",
+      image: "/sertif-arrya/preview manajemen proyek.webp",
+      pdf: "/sertif-arrya/manajemen proyek.pdf",
+      color: "rgba(16, 185, 129, 0.2)"
+    },
+    {
+      title: lang === 'id' ? "Membangun Sistem Machine Learning" : "Building Machine Learning Systems",
+      issuer: "Dicoding Indonesia",
+      date: "2026",
+      desc: lang === 'id'
+        ? "Menyelesaikan kelas lanjutan (90 jam) yang berfokus pada implementasi MLOps menggunakan alat seperti MLflow, GitHub, dan Docker untuk membangun sistem ML yang andal. Materi mencakup pengantar MLOps, pengelolaan metadata dengan tools open-source, membangun model ML yang andal, serving model, hingga monitoring dan alerting model machine learning."
+        : "Completed an advanced 90-hour course focused on implementing MLOps using tools like MLflow, GitHub, and Docker to build reliable ML systems. Covered MLOps introduction, metadata management with open-source tools, building reliable ML models, model serving, and ML model monitoring and alerting.",
+      image: "/sertif-arrya/preview membangun sistem machine learning.webp",
+      pdf: "/sertif-arrya/membangun sistem machine leraning.pdf",
+      color: "rgba(244, 63, 94, 0.2)"
+    },
+    {
+      title: lang === 'id' ? "Belajar Penerapan AI di Aplikasi Web" : "Applying AI in Web Applications",
+      issuer: "Dicoding Indonesia",
+      date: "2026",
+      desc: lang === 'id'
+        ? "Menyelesaikan kelas (50 jam) yang mengajarkan cara mengintegrasikan pre-trained model ke dalam aplikasi web dengan dukungan PWA dan mode offline. Materi mencakup pendahuluan AI pada platform browser, computer vision pada browser, generative AI pada browser, hingga integrasi proyek NutriApp."
+        : "Completed a 50-hour course teaching how to integrate pre-trained models into web applications with PWA and offline mode support. Covered an introduction to AI on the browser platform, computer vision in the browser, generative AI in the browser, and the NutriApp project integration.",
+      image: "/sertif-arrya/preview Penerapan AI di Aplikasi Web.webp",
+      pdf: "/sertif-arrya/Penerapan AI di Aplikasi Web.pdf",
+      color: "rgba(251, 146, 60, 0.2)"
+    }
+  ], [lang]);
+
+  const achievements = useMemo(() => [
+    {
+      type: "achievement",
+      title: lang === 'id' ? "Juara Favorit - UKRIDA Virtual Singing Group Competition" : "Favorite Winner - UKRIDA Virtual Singing Group Competition",
+      issuer: "Universitas Kristen Krida Wacana",
+      date: "30 Juni 2021",
+      desc: lang === 'id'
+        ? "Meraih penghargaan Juara Favorit bersama tim vokal grup Gema Harmoni (SMAN 11 Banjarmasin) dalam UKRIDA Virtual Singing Group Competition, diselenggarakan Universitas Kristen Krida Wacana sebagai rangkaian Dies Natalis ke-54."
+        : "Won the Favorite Winner award with the Gema Harmoni vocal group (SMAN 11 Banjarmasin) at the UKRIDA Virtual Singing Group Competition, held by Universitas Kristen Krida Wacana as part of its 54th anniversary celebration.",
+      image: "/sertif-arrya/preview Juara favorit vokal grup universitas kristen krida wacana.webp",
+      pdf: "/sertif-arrya/Juara favorit vokal grup universitas kristen krida wacana.jpeg",
+      color: "rgba(236, 72, 153, 0.2)"
+    },
+    {
+      type: "achievement",
+      title: lang === 'id' ? "Harapan 3 - Lomba Paduan Suara Dispersip Kalsel" : "3rd Runner-up - Dispersip Kalsel Choir Competition",
+      issuer: "Dinas Perpustakaan dan Kearsipan Provinsi Kalimantan Selatan",
+      date: "21-22 Juni 2023",
+      desc: lang === 'id'
+        ? "Meraih Harapan 3 Tingkat Perguruan Tinggi mewakili Politeknik Negeri Banjarmasin pada Lomba Paduan Suara Tingkat SLTA/Sederajat dan Perguruan Tinggi yang diselenggarakan Dinas Perpustakaan dan Kearsipan Provinsi Kalimantan Selatan di Banjarmasin."
+        : "Won 3rd Runner-up in the University category representing Politeknik Negeri Banjarmasin at the Choir Competition for High School and University levels, held by the Regional Library and Archives Office of South Kalimantan in Banjarmasin.",
+      image: "/sertif-arrya/preview Juara Harapan 3 Lomba Paduan suara dinas perpustakaan kalimantan selatan.webp",
+      pdf: "/sertif-arrya/Juara Harapan 3 Lomba Paduan suara dinas perpustakaan kalimantan selatan.jpeg",
+      color: "rgba(139, 92, 246, 0.2)"
+    },
+    {
+      type: "achievement",
+      title: lang === 'id' ? "Program Pertukaran Mahasiswa Merdeka (PMM) Angkatan 4" : "Independent Student Exchange Program (PMM) Batch 4",
+      issuer: "Politeknik Negeri Banjarmasin & Politeknik Negeri Malang",
+      date: "23 Agustus 2024",
+      desc: lang === 'id'
+        ? "Terpilih sebagai mahasiswa peserta Program Pertukaran Mahasiswa Merdeka Angkatan 4 Tahun 2024, dengan Politeknik Negeri Banjarmasin sebagai perguruan tinggi pengirim dan Politeknik Negeri Malang sebagai perguruan tinggi penerima."
+        : "Selected as a participating student in the 2024 Independent Student Exchange Program (PMM) Batch 4, with Politeknik Negeri Banjarmasin as the sending institution and Politeknik Negeri Malang as the host institution.",
+      image: "/sertif-arrya/preview Pertukaran Mahasiswa Merdeka 4 .webp",
+      pdf: "/sertif-arrya/Pertukaran Mahasiswa Merdeka 4 .jpeg",
+      color: "rgba(59, 130, 246, 0.2)"
+    },
+    {
+      type: "achievement",
+      title: lang === 'id' ? "Juara Favorit - Lomba Paduan Suara IAIN Ponorogo" : "Favorite Winner - IAIN Ponorogo Choir Competition",
+      issuer: "UKM Seni Budaya, Institut Agama Islam Negeri Ponorogo",
+      date: "2021",
+      desc: lang === 'id'
+        ? "Meraih Juara Favorit Lomba Paduan Suara bersama Gema Harmoni A pada Festival Seni UKM SEIYA (FSUS) 2021 yang diselenggarakan Unit Kegiatan Mahasiswa Seni Budaya, Institut Agama Islam Negeri Ponorogo."
+        : "Won the Favorite Winner award for choir competition with Gema Harmoni A at the 2021 UKM SEIYA Arts Festival (FSUS), held by the Arts and Culture Student Activity Unit of the State Islamic Institute of Ponorogo.",
+      image: "/sertif-arrya/preview juara favorit lomba paduan suara institut agama islam negeri ponorogo.webp",
+      pdf: "/sertif-arrya/juara favorit lomba paduan suara institut agama islam negeri ponorogo.jpeg",
+      color: "rgba(34, 197, 94, 0.2)"
+    },
+    {
+      type: "achievement",
+      title: lang === 'id' ? "Juara II - Lomba Paduan Suara Dispora Kalsel" : "2nd Place - Dispora Kalsel Choir Competition",
+      issuer: "Dinas Pemuda dan Olahraga Provinsi Kalimantan Selatan",
+      date: "16-18 Desember 2020",
+      desc: lang === 'id'
+        ? "Meraih Juara II Kategori SMA/SMK Sederajat mewakili SMAN 11 Banjarmasin pada Lomba Paduan Suara yang diselenggarakan Dinas Pemuda dan Olahraga Provinsi Kalimantan Selatan dalam rangka peringatan Hari Pahlawan."
+        : "Won 2nd Place in the High School/Vocational category representing SMAN 11 Banjarmasin at the Choir Competition held by the Youth and Sports Office of South Kalimantan Province in commemoration of Heroes' Day.",
+      image: "/sertif-arrya/preview juara 2 paduan suara dispora kalimantan selatan.webp",
+      pdf: "/sertif-arrya/juara 2 paduan suara dispora kalimantan selatan.jpeg",
+      color: "rgba(234, 179, 8, 0.2)"
+    },
+    {
+      type: "achievement",
+      title: lang === 'id' ? "Juara I - Lomba Video Pendek UIN Antasari" : "1st Place - UIN Antasari Short Video Competition",
+      issuer: "HMJ Studi Agama-Agama, UIN Antasari Banjarmasin",
+      date: "03 Maret 2020",
+      desc: lang === 'id'
+        ? "Meraih Juara I mewakili SMAN 11 Banjarmasin pada Lomba Video Pendek tingkat SLTA/Sederajat se-Kalimantan Selatan, diselenggarakan HMJ Studi Agama-Agama Fakultas Ushuluddin dan Humaniora UIN Antasari Banjarmasin dalam rangka 43 tahun Studi Agama-Agama."
+        : "Won 1st Place representing SMAN 11 Banjarmasin at the South Kalimantan Short Video Competition for high school level, held by the Religious Studies Student Association, Faculty of Ushuluddin and Humanities, UIN Antasari Banjarmasin, in celebration of 43 years of Religious Studies.",
+      image: "/sertif-arrya/preview juara 1 film pendek uin antasari banjarmasin.webp",
+      pdf: "/sertif-arrya/juara 1 film pendek uin antasari banjarmasin.jpeg",
+      color: "rgba(239, 68, 68, 0.2)"
     }
   ], [lang]);
 
@@ -1428,7 +1555,7 @@ function App() {
                     <Code size={14} className="text-blue-600 dark:text-blue-400" /> <span>Fullstack</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1 bg-black/5 dark:bg-white/5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] md:text-xs uppercase font-bold tracking-wider text-gray-700 dark:text-white">
-                    <Terminal size={14} className="text-purple-600 dark:text-purple-400" /> <span>AI Enthusiast</span>
+                    <Terminal size={14} className="text-purple-600 dark:text-purple-400" /> <span>ML Engineer</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1 bg-black/5 dark:bg-white/5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] md:text-xs uppercase font-bold tracking-wider text-gray-700 dark:text-white">
                     <Database size={14} className="text-green-600 dark:text-green-400" /> <span>IoT Geek</span>
@@ -1461,7 +1588,7 @@ function App() {
                       <div ref={portfolioRef} className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 snap-x snap-mandatory scrollbar-none pb-6 w-full -mx-6 px-6 md:mx-0 md:px-0">
                         {activeTab === 0 ? projects.map((p, i) => (
                           <ProjectCard key={p.id} project={p} onClick={handleProjectClick} />
-                        )) : certificates.map((c, i) => (
+                        )) : (activeTab === 3 ? achievements : certificates).map((c, i) => (
                           <div key={i} onClick={() => setSelectedCertificate(c)} className="group flex flex-col h-full cursor-pointer snap-center shrink-0 w-[82vw] sm:w-[320px] md:w-auto md:shrink-1">
                             <SpotlightCard spotlightColor={c.color} className="h-full !p-5 flex flex-col justify-between">
                               <div className="space-y-4">

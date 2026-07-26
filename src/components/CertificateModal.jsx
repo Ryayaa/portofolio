@@ -5,14 +5,26 @@ import { X, ExternalLink, Calendar, Award } from 'lucide-react';
 const CertificateModal = React.memo(({ certificate, isOpen, onClose, lang = 'id' }) => {
   if (!certificate) return null;
 
+  const isAchievement = certificate.type === 'achievement';
+
   const t = {
-    credential: lang === 'id' ? 'Sertifikat Kredensial' : 'Credential Certificate',
+    credential: isAchievement
+      ? (lang === 'id' ? 'Piagam Penghargaan' : 'Award Certificate')
+      : (lang === 'id' ? 'Sertifikat Kredensial' : 'Credential Certificate'),
     issuer: lang === 'id' ? 'Penerbit' : 'Issuer',
-    gradYear: lang === 'id' ? 'Tahun Kelulusan' : 'Graduation Year',
-    note: lang === 'id' 
-      ? 'Sertifikat ini diperoleh setelah menyelesaikan kurikulum pelatihan terstruktur dan menyelesaikan proyek/ujian kelulusan yang dinilai langsung oleh tim instruktur.'
-      : 'This certificate was obtained after completing a structured training curriculum and passing projects/exams evaluated directly by instructors.',
-    viewPdf: lang === 'id' ? 'Lihat PDF Sertifikat' : 'View PDF Certificate'
+    gradYear: isAchievement
+      ? (lang === 'id' ? 'Tanggal' : 'Date')
+      : (lang === 'id' ? 'Tahun Kelulusan' : 'Graduation Year'),
+    note: isAchievement
+      ? (lang === 'id'
+        ? 'Penghargaan ini diberikan atas prestasi dan partisipasi dalam kompetisi/program resmi yang diselenggarakan oleh instansi terkait.'
+        : 'This award was granted for achievement and participation in an official competition/program organized by the relevant institution.')
+      : (lang === 'id'
+        ? 'Sertifikat ini diperoleh setelah menyelesaikan kurikulum pelatihan terstruktur dan menyelesaikan proyek/ujian kelulusan yang dinilai langsung oleh tim instruktur.'
+        : 'This certificate was obtained after completing a structured training curriculum and passing projects/exams evaluated directly by instructors.'),
+    viewPdf: isAchievement
+      ? (lang === 'id' ? 'Lihat Sertifikat' : 'View Certificate')
+      : (lang === 'id' ? 'Lihat PDF Sertifikat' : 'View PDF Certificate')
   };
 
   return (
